@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
-import client from "@/lib/apollo-client";
+//import apolloClient from "@/lib/apollo-client";
 
 const CREATE_USER = gql`
   mutation CreateUser($createUserInput: CreateUserInput!) {
@@ -19,7 +19,7 @@ export default function CreateUserPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
-  const [createUser] = useMutation(CREATE_USER, { client });
+  const [createUser] = useMutation(CREATE_USER);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

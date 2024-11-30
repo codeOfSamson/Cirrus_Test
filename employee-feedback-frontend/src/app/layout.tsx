@@ -1,13 +1,16 @@
-// src/app/layout.tsx
-export const metadata = {
-  title: 'Employee Feedback System',
-};
+"use client";
+import { ApolloProvider } from '@apollo/client';
+import  apolloClient  from '../lib/apollo-client'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+
+
   return (
     <html lang="en">
       <body>
-        <main>{children}</main>
+        <ApolloProvider client={apolloClient}>
+          {children}
+        </ApolloProvider>
       </body>
     </html>
   );

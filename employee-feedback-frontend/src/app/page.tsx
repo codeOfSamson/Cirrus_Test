@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 
 export default function Home() {
-  
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -22,6 +22,9 @@ export default function Home() {
         <h1>Welcome to Employee Review App</h1>
         <li>
             <Link href="/create-user">Go to Create User Page</Link>
+          </li>
+          <li>
+            <Link href="/admin">Go to Admin Page</Link>
           </li>
         </div>
       </main>
