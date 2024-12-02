@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Field } from '@nestjs/graphql';
 
 @ObjectType()
 export class Review {
@@ -14,9 +14,7 @@ export class Review {
   @Field(() => String)
   feedback: string;    // The feedback given by the reviewer
 
-  @Field(() => Int)
-  rating: number;      // Rating (e.g., 1-5 scale)
+  @Field(() => String)
+  status: string;    // The feedback given by the reviewer
 
-  @Field(() => Date)
-  createdAt: Date;     // Date when the review was created
 }
