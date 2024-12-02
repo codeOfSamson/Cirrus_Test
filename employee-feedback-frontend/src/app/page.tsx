@@ -20,12 +20,10 @@ export default function Home() {
 
         <div className={styles.ctas}>
         <h1>Welcome to Employee Review App</h1>
-        <li>
-            <Link href="/create-user">Go to Create User Page</Link>
-          </li>
-          <li>
+       
+          <div>
             <Link href="/admin">Go to Admin Page</Link>
-          </li>
+          </div>
         </div>
       </main>
       <footer className={styles.footer}>
