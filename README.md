@@ -14,7 +14,7 @@ Install dependencies:
 npm install
 
 2.Create a .env file in the backend directory and add the following environment variables:
-PORT=4000
+PORT=3000
 MONGO_URI=<your_mongo_connection_string>
 JWT_SECRET=<your_jwt_secret>
 Replace <your_mongo_connection_string> with your MongoDB URI and <your_jwt_secret> with a secure secret key for JWT.
