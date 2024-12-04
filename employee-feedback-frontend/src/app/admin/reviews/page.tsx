@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { gql, useQuery, useMutation } from "@apollo/client";
+import Link from "next/link";
+
 
 // GraphQL Queries and Mutations
 const GET_REVIEWS = gql`
@@ -88,6 +90,13 @@ const ReviewsCRUD = () => {
       <ul style={styles.list}>
         {data.getAllReviews.map((review: any) => (
           <li key={review.id} style={styles.listItem}>
+                      <span
+                    style={{
+                      ...styles.statusIcon,
+                      backgroundColor:
+                        review.status === "PENDING" ? "red" : "green",
+                    }}
+                  ></span>
             <span>
               <strong>Reviewer:</strong> {review.reviewer} - <strong>Reviewee:</strong> {review.reviewee} -{" "}
               <strong>Status:</strong> {review.status}
@@ -134,6 +143,8 @@ const ReviewsCRUD = () => {
           {form.id ? "Update" : "Create"}
         </button>
       </div>
+      <Link href="/admin">Go Back</Link>
+
     </div>
   );
 };
@@ -204,6 +215,13 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
   },
+  statusIcon: {
+    width: "12px",
+    height: "12px",
+    borderRadius: "50%",
+    marginRight: "10px",
+    display: "inline-block",
+  }
 };
 
 export default ReviewsCRUD;

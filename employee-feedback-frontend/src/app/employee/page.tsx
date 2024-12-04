@@ -100,7 +100,8 @@ const EmployeeLandingPage = () => {
           )}
         </div>
       )}
-    
+          <Link href="/">Go to Home Page</Link>
+
     </div>
   );
 };

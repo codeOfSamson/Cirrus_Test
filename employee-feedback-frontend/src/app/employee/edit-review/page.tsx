@@ -1,8 +1,10 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
+import Link from "next/link";
 
 const UPDATE_REVIEW = gql`
   mutation UpdateReview($id: String!, $updateReviewDto: UpdateReviewDto!) {
@@ -16,14 +18,22 @@ const UPDATE_REVIEW = gql`
   }
 `;
 
-const EditReviewPage = () => {
+interface Review {
+  id: string;
+  reviewer: string;
+  reviewee: string;
+  feedback: string;
+  status: string;
+}
+
+const EditReviewContent = () => {
   const searchParams = useSearchParams();
   const reviewData = searchParams.get("review");
 
-  const review = reviewData ? JSON.parse(reviewData) : null;
+  const review: Review | null = reviewData ? JSON.parse(reviewData) : null;
 
   const [updateReview, { loading: updateLoading }] = useMutation(UPDATE_REVIEW);
-  const [updatedReview, setUpdatedReview] = useState(review);
+  const [updatedReview, setUpdatedReview] = useState<Review | null>(review);
 
   if (!review)
     return (
@@ -32,16 +42,26 @@ const EditReviewPage = () => {
       </p>
     );
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setUpdatedReview((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setUpdatedReview((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
   };
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!updatedReview) {
+      alert("Error: No review data to update!");
+      return;
+    }
 
     try {
       await updateReview({
@@ -56,9 +76,9 @@ const EditReviewPage = () => {
         },
       });
       alert("Review updated successfully!");
-      window.history.back()
-    } catch (error) {
-      alert("Error updating review: " + error.message);
+      window.history.back();
+    } catch (err: any) {
+      alert("Error updating review: " + err.message);
     }
   };
 
@@ -71,7 +91,7 @@ const EditReviewPage = () => {
           <input
             type="text"
             name="reviewer"
-            value={updatedReview.reviewer}
+            value={updatedReview?.reviewer || ""}
             onChange={handleInputChange}
             style={styles.input}
           />
@@ -81,7 +101,7 @@ const EditReviewPage = () => {
           <input
             type="text"
             name="reviewee"
-            value={updatedReview.reviewee}
+            value={updatedReview?.reviewee || ""}
             onChange={handleInputChange}
             style={styles.input}
           />
@@ -90,7 +110,7 @@ const EditReviewPage = () => {
           <label style={styles.label}>Feedback:</label>
           <textarea
             name="feedback"
-            value={updatedReview.feedback}
+            value={updatedReview?.feedback || ""}
             onChange={handleInputChange}
             style={styles.textarea}
           />
@@ -99,7 +119,7 @@ const EditReviewPage = () => {
           <label style={styles.label}>Status:</label>
           <select
             name="status"
-            value={updatedReview.status}
+            value={updatedReview?.status || "PENDING"}
             onChange={handleInputChange}
             style={styles.select}
           >
@@ -111,13 +131,21 @@ const EditReviewPage = () => {
           {updateLoading ? "Updating..." : "Update Review"}
         </button>
       </form>
+      <Link href="/employee">Go Back</Link>
+
     </div>
   );
 };
 
+const EditReviewPage = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <EditReviewContent />
+  </Suspense>
+);
+
 export default EditReviewPage;
 
-const styles= {
+const styles: Record<string, React.CSSProperties> = {
   container: {
     maxWidth: "600px",
     margin: "0 auto",
@@ -183,12 +211,4 @@ const styles= {
     cursor: "pointer",
     transition: "background-color 0.3s",
   },
-  buttonHover: {
-    backgroundColor: "#45a049",
-  },
-};
-
-// Add hover effect to the button dynamically
-styles.button[":hover"] = {
-  backgroundColor: "#45a049",
 };

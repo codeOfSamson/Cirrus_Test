@@ -113,17 +113,34 @@ const UsersCRUD = () => {
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
         />
+
+        
+
+          {/* <label style={styles.label}>Status:</label> */}
+          <select
+            name="status"
+            value={form.role}
+            onChange={(e) => setForm({ ...form, role: e.target.value })}
+            style={styles.input}
+          >
+            <option value="admin">Admin</option>
+            <option value="employee">Employee</option>
+          </select>
+
+
+
+{/* 
         <input
           style={styles.input}
           placeholder="Role : 'admin' or 'employee'"
           value={form.role}
           onChange={(e) => setForm({ ...form, role: e.target.value })}
-        />
+        /> */}
         <button style={styles.buttonPrimary} onClick={form.id ? handleUpdate : handleCreate}>
           {form.id ? "Update" : "Create"}
         </button>
       </div>
-      <Link href="/">Go to Home Page</Link>
+      <Link href="/admin">Go Back</Link>
 
     </div>
   );

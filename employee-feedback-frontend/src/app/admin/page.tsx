@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const AdminLandingPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [credentials, setCredentials] = useState({ username: "", password: "" });
+  const [credentials, setCredentials] = useState({ username: "admin", password: "password" });
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,26 +20,28 @@ const AdminLandingPage = () => {
   if (!isLoggedIn) {
     return (
       <div style={styles.loginContainer}>
-        <h1 style={styles.title}>Admin Login</h1>
+        <h1 style={styles.title}>Admin Login 'mockup'</h1>
         <form onSubmit={handleLogin} style={styles.form}>
           <input
             style={styles.input}
             type="text"
             placeholder="Username: Hint: 'admin'"
-            value={credentials.username}
+            value='admin'
             onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
           />
           <input
             style={styles.input}
             type="password"
             placeholder="Password: Hint: 'passowrd"
-            value={credentials.password}
+            value='password'
             onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
           />
           <button style={styles.button} type="submit">
             Login
           </button>
         </form>
+        <Link href="/">Go to Home Page</Link>
+
       </div>
     );
   }
@@ -63,6 +65,8 @@ const AdminLandingPage = () => {
           </Link>
         </div>
       </div>
+      <Link href="/">Go to Home Page</Link>
+
     </div>
   );
 };
