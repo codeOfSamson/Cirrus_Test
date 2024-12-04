@@ -13,11 +13,12 @@ For the Backend:
 Install dependencies:
 npm install
 
-2.Create a .env file in the backend directory and add the following environment variables:
-PORT=3000
-MONGO_URI=<your_mongo_connection_string>
-JWT_SECRET=<your_jwt_secret>
-Replace <your_mongo_connection_string> with your MongoDB URI and <your_jwt_secret> with a secure secret key for JWT.
+2.Go to app module and find:
+
+MongooseModule.forRoot(process.env.MONGO_URI),
+
+replace "process.env.MONGO_URI" with uri pointing to your local mongodb.
+
 
 3.Start the backend server:
 npm run start:dev
