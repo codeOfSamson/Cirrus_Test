@@ -58,14 +58,14 @@ const EmployeeLandingPage = () => {
     );
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.heading}>Employees (Select one)</h1>
-      <ul style={styles.list}>
+    <div className="p-6 bg-gray-100 min-h-screen font-sans">
+      <h1 className="text-4xl text-center text-gray-800 mb-8">Employees (Select one)</h1>
+      <ul className="list-none p-0 m-0">
         {employeeData.getUsers.map((employee: any) => (
           <li
             key={employee.id}
-            style={styles.listItem}
             onClick={() => handleEmployeeClick(employee)}
+            className="p-3 mb-4 bg-blue-600 text-white text-center cursor-pointer rounded-lg hover:bg-blue-700 transition-colors"
           >
             {employee.name} ({employee.role})
           </li>
@@ -73,24 +73,29 @@ const EmployeeLandingPage = () => {
       </ul>
 
       {selectedEmployee && (
-        <div style={styles.reviewsSection}>
-          <h2 style={styles.subheading}>Reviews for {selectedEmployee.name}</h2>
+        <div className="mt-8 text-left">
+          <h2 className="text-2xl mb-4  text-black">Reviews for {selectedEmployee.name}</h2>
           {filteredReviews && filteredReviews.length > 0 ? (
-            <ul style={styles.reviewsList}>
+            <ul className="list-none p-0 m-0">
               {filteredReviews.map((review: any) => (
-                <li key={review.id} style={styles.reviewItem}>
+                <li
+                  key={review.id}
+                  className="flex items-center text-black justify-between p-4 mb-4 bg-gray-200 rounded-lg"
+                >
                   <span
-                    style={{
-                      ...styles.statusIcon,
-                      backgroundColor:
-                        review.status === "PENDING" ? "red" : "green",
-                    }}
+                    className={`w-3 h-3 rounded-full mr-4 inline-block ${
+                      review.status === "PENDING" ? "bg-red-500" : "bg-green-500"
+                    }`}
                   ></span>
-                  <strong>Reviewee:</strong> {review.reviewee}
-                  <strong>Reviewer:</strong> {review.reviewer}
-                  <strong> Status:</strong> {review.status}
+                  <div>
+                    <strong>Reviewee:</strong> {review.reviewee} <br />
+                    <strong>Reviewer:</strong> {review.reviewer} <br />
+                    <strong>Status:</strong> {review.status}
+                  </div>
                   <Link href={handleEditReviewLink(review)}>
-                    <button style={styles.editButton}>Edit</button>
+                    <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
+                      Edit
+                    </button>
                   </Link>
                 </li>
               ))}
@@ -100,91 +105,12 @@ const EmployeeLandingPage = () => {
           )}
         </div>
       )}
-          <Link href="/">Go to Home Page</Link>
 
+      <Link href="/" className="mt-6 block text-center text-blue-500 hover:underline">
+        Go to Home Page
+      </Link>
     </div>
   );
-};
-
-// Styling
-const styles = {
-  container: {
-    padding: "20px",
-    fontFamily: "Arial, sans-serif",
-    backgroundColor: "#f9f9f9",
-    minHeight: "100vh",
-  },
-  button: {
-    marginLeft: "10px",
-    padding: "5px 10px",
-    backgroundColor: "#007bff",
-    color: "#fff",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-  },
-  heading: {
-    fontSize: "32px",
-    textAlign: "center" as const,
-    marginBottom: "20px",
-  },
-  list: {
-    listStyleType: "none",
-    padding: 0,
-    margin: 0,
-  },
-  listItem: {
-    padding: "10px 15px",
-    margin: "5px 0",
-    backgroundColor: "#007bff",
-    color: "#fff",
-    borderRadius: "5px",
-    cursor: "pointer",
-    textAlign: "center" as const,
-    transition: "background-color 0.3s",
-  },
-  listItemHover: {
-    backgroundColor: "#0056b3",
-  },
-  reviewsSection: {
-    marginTop: "30px",
-    textAlign: "left" as const,
-  },
-  subheading: {
-    fontSize: "24px",
-    marginBottom: "10px",
-  },
-  reviewsList: {
-    listStyleType: "none",
-    padding: 0,
-    margin: 0,
-  },
-  reviewItem: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "#e3e3e3",
-    padding: "10px 15px",
-    margin: "5px 0",
-    borderRadius: "5px",
-  },
-  statusIcon: {
-    width: "12px",
-    height: "12px",
-    borderRadius: "50%",
-    marginRight: "10px",
-    display: "inline-block",
-  },
-  editButton: {
-    backgroundColor: "#28a745",
-    color: "#fff",
-    border: "none",
-    borderRadius: "4px",
-    padding: "5px 10px",
-    cursor: "pointer",
-    fontSize: "14px",
-    transition: "background-color 0.3s",
-  },
 };
 
 export default EmployeeLandingPage;

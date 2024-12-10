@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 
-
 // GraphQL Queries and Mutations
 const GET_REVIEWS = gql`
   query GetAllReviews {
@@ -85,143 +84,76 @@ const ReviewsCRUD = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.header}>Review Management</h1>
-      <ul style={styles.list}>
+    <div className="container mx-auto p-6 bg-gray-100 rounded-lg shadow-lg">
+      <h1 className="text-2xl font-semibold text-center mb-8">Review Management</h1>
+
+      <ul className="space-y-4">
         {data.getAllReviews.map((review: any) => (
-          <li key={review.id} style={styles.listItem}>
-                      <span
-                    style={{
-                      ...styles.statusIcon,
-                      backgroundColor:
-                        review.status === "PENDING" ? "red" : "green",
-                    }}
-                  ></span>
-            <span>
+          <li key={review.id} className="flex justify-between items-center p-4 bg-white border rounded-md shadow-sm">
+            <span className={`w-3 h-3 rounded-full mr-4 ${review.status === "PENDING" ? "bg-red-500" : "bg-green-500"}`}></span>
+            <span className="flex-grow">
               <strong>Reviewer:</strong> {review.reviewer} - <strong>Reviewee:</strong> {review.reviewee} -{" "}
               <strong>Status:</strong> {review.status}
             </span>
             <div>
-              <button style={styles.button} onClick={() => setForm(review)}>
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-blue-600"
+                onClick={() => setForm(review)}
+              >
                 Edit
               </button>
-              <button style={styles.buttonDelete} onClick={() => handleDelete(review.id)}>
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                onClick={() => handleDelete(review.id)}
+              >
                 Delete
               </button>
             </div>
           </li>
         ))}
       </ul>
-      <div style={styles.formContainer}>
-        <h2 style={styles.formHeader}>{form.id ? "Update Review" : "Create Review"}</h2>
+
+      <div className="mt-8 p-6 bg-white rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold mb-4">{form.id ? "Update Review" : "Create Review"}</h2>
+
         <input
-          style={styles.input}
+          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Reviewer"
           value={form.reviewer}
           onChange={(e) => setForm({ ...form, reviewer: e.target.value })}
         />
         <input
-          style={styles.input}
+          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Reviewee"
           value={form.reviewee}
           onChange={(e) => setForm({ ...form, reviewee: e.target.value })}
         />
         <textarea
-          style={styles.input}
+          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Feedback"
           value={form.feedback}
           onChange={(e) => setForm({ ...form, feedback: e.target.value })}
         />
-         {form.id ?   <input
-          style={styles.input}
-          placeholder="Status: 'PENDING' or 'COMPLETED'"
-          value={form.status}
-          onChange={(e) => setForm({ ...form, status: e.target.value })}
-        />: ""}
-      
-        <button style={styles.buttonPrimary} onClick={form.id ? handleUpdate : handleCreate}>
+        {form.id && (
+          <input
+            className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Status: 'PENDING' or 'COMPLETED'"
+            value={form.status}
+            onChange={(e) => setForm({ ...form, status: e.target.value })}
+          />
+        )}
+        <button
+          className="w-full p-3 bg-green-500 text-white rounded-md hover:bg-green-600"
+          onClick={form.id ? handleUpdate : handleCreate}
+        >
           {form.id ? "Update" : "Create"}
         </button>
       </div>
-      <Link href="/admin">Go Back</Link>
-
+      <Link href="/admin" className="block text-center mt-4 text-blue-500 hover:underline">
+        Go Back
+      </Link>
     </div>
   );
-};
-
-// Inline Styles
-const styles = {
-  container: {
-    fontFamily: "Arial, sans-serif",
-    padding: "20px",
-    maxWidth: "800px",
-    margin: "auto",
-    borderRadius: "8px",
-    border: "1px solid #ddd",
-    backgroundColor: "#f9f9f9",
-  },
-  header: {
-    fontSize: "24px",
-    marginBottom: "20px",
-  },
-  list: {
-    listStyle: "none",
-    padding: "0",
-  },
-  listItem: {
-    display: "flex",
-    justifyContent: "space-between",
-    marginBottom: "10px",
-    padding: "10px",
-    border: "1px solid #ddd",
-    borderRadius: "4px",
-    backgroundColor: "#fff",
-  },
-  button: {
-    marginLeft: "10px",
-    padding: "5px 10px",
-    backgroundColor: "#007bff",
-    color: "#fff",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-  },
-  buttonDelete: {
-    backgroundColor: "#dc3545",
-    marginLeft: "10px",
-  },
-  formContainer: {
-    marginTop: "20px",
-    padding: "20px",
-    borderRadius: "8px",
-    backgroundColor: "#fff",
-  },
-  formHeader: {
-    fontSize: "18px",
-    marginBottom: "10px",
-  },
-  input: {
-    width: "100%",
-    padding: "10px",
-    marginBottom: "10px",
-    border: "1px solid #ddd",
-    borderRadius: "4px",
-  },
-  buttonPrimary: {
-    padding: "10px 20px",
-    backgroundColor: "#28a745",
-    color: "#fff",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-  },
-  statusIcon: {
-    width: "12px",
-    height: "12px",
-    borderRadius: "50%",
-    marginRight: "10px",
-    display: "inline-block",
-  }
 };
 
 export default ReviewsCRUD;

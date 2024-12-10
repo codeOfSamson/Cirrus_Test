@@ -37,7 +37,7 @@ const EditReviewContent = () => {
 
   if (!review)
     return (
-      <p style={{ textAlign: "center", color: "red", marginTop: "20px" }}>
+      <p className="text-center text-red-500 mt-5">
         Error: No review data provided!
       </p>
     );
@@ -83,56 +83,61 @@ const EditReviewContent = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.title}>Edit Review</h1>
-      <form onSubmit={handleUpdate} style={styles.form}>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Reviewer:</label>
+    <div className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-md font-sans">
+      <h1 className="text-2xl font-semibold text-center text-gray-800 mb-8">Edit Review</h1>
+      <form onSubmit={handleUpdate} className="flex flex-col gap-4">
+        <div className="flex flex-col">
+          <label className="text-gray-600 font-semibold mb-2">Reviewer:</label>
           <input
             type="text"
             name="reviewer"
             value={updatedReview?.reviewer || ""}
             onChange={handleInputChange}
-            style={styles.input}
+            className="p-3 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Reviewee:</label>
+        <div className="flex flex-col">
+          <label className="text-gray-600 font-semibold mb-2">Reviewee:</label>
           <input
             type="text"
             name="reviewee"
             value={updatedReview?.reviewee || ""}
             onChange={handleInputChange}
-            style={styles.input}
+            className="p-3 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Feedback:</label>
+        <div className="flex flex-col">
+          <label className="text-gray-600 font-semibold mb-2">Feedback:</label>
           <textarea
             name="feedback"
             value={updatedReview?.feedback || ""}
             onChange={handleInputChange}
-            style={styles.textarea}
+            className="p-3 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none h-32"
           />
         </div>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Status:</label>
+        <div className="flex flex-col">
+          <label className="text-gray-600 font-semibold mb-2">Status:</label>
           <select
             name="status"
             value={updatedReview?.status || "PENDING"}
             onChange={handleInputChange}
-            style={styles.select}
+            className="p-3 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="PENDING">Pending</option>
             <option value="COMPLETED">Completed</option>
           </select>
         </div>
-        <button type="submit" disabled={updateLoading} style={styles.button}>
+        <button
+          type="submit"
+          disabled={updateLoading}
+          className="mt-4 p-3 text-lg font-bold text-white bg-green-500 rounded-md hover:bg-green-600 disabled:bg-gray-400"
+        >
           {updateLoading ? "Updating..." : "Update Review"}
         </button>
       </form>
-      <Link href="/employee">Go Back</Link>
-
+      <Link href="/employee" className="mt-4 block text-center text-blue-500 hover:underline">
+        Go Back
+      </Link>
     </div>
   );
 };
@@ -144,71 +149,3 @@ const EditReviewPage = () => (
 );
 
 export default EditReviewPage;
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    maxWidth: "600px",
-    margin: "0 auto",
-    padding: "20px",
-    backgroundColor: "#ffffff",
-    borderRadius: "10px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    fontFamily: "Arial, sans-serif",
-  },
-  title: {
-    textAlign: "center",
-    color: "#333",
-    marginBottom: "20px",
-    fontSize: "24px",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "15px",
-  },
-  inputGroup: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  label: {
-    marginBottom: "5px",
-    fontWeight: "bold",
-    color: "#555",
-  },
-  input: {
-    padding: "10px",
-    fontSize: "16px",
-    border: "1px solid #ccc",
-    borderRadius: "5px",
-    outline: "none",
-    transition: "border-color 0.3s",
-  },
-  textarea: {
-    padding: "10px",
-    fontSize: "16px",
-    border: "1px solid #ccc",
-    borderRadius: "5px",
-    outline: "none",
-    resize: "none",
-    height: "100px",
-    transition: "border-color 0.3s",
-  },
-  select: {
-    padding: "10px",
-    fontSize: "16px",
-    border: "1px solid #ccc",
-    borderRadius: "5px",
-    outline: "none",
-  },
-  button: {
-    padding: "12px",
-    fontSize: "16px",
-    fontWeight: "bold",
-    color: "#fff",
-    backgroundColor: "#4CAF50",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    transition: "background-color 0.3s",
-  },
-};
