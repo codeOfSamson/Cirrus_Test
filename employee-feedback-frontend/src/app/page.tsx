@@ -5,107 +5,51 @@ import Link from "next/link";
 
 const LandingPage = () => {
   return (
-    <div style={styles.container}>
-      <h1 style={styles.title}>Employee Review App</h1>
+    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 text-gray-800">
+      {/* Header Section */}
+      <header className="text-center mb-6">    
+        <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+          Employee Review App
+        </h1>
+        <p className="mt-2 text-base text-gray-600 sm:text-lg">
+          Empower your team with transparency and insights!
+        </p>
+      </header>
 
-      <div style={styles.hero}>
+      {/* Hero Section */}
+      <div className="relative w-full max-w-5xl h-[50vh] rounded-lg overflow-hidden shadow-lg">
         <img
-          src="https://t2binteriors.com/wp-content/uploads/2022/02/elevated-view-of-a-busy-open-plan-office-2021-08-26-16-14-58-utc.jpg" 
+          src="https://t2binteriors.com/wp-content/uploads/2022/02/elevated-view-of-a-busy-open-plan-office-2021-08-26-16-14-58-utc.jpg"
           alt="Modern Office"
-          style={styles.heroImage}
+          className="w-full h-full object-cover"
         />
-      
-      </div>
-      <div style={styles.overlay}>
-          <p style={styles.description}>
-            A seamless solution to manage employee reviews and feedback. Empower your team with transparency and insights!
+        <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+          <p className="text-white text-center text-sm sm:text-base max-w-xl leading-relaxed">
+            A seamless solution to manage employee reviews and feedback. Transform how your team collaborates and grows.
           </p>
         </div>
-      {/* Navigation Links */}
-      <div style={styles.linksContainer}>
+      </div>
+
+      {/* Button Links */}
+      <div className="mt-10 flex gap-4">
         <Link href="/employee">
-          <button style={styles.button}>Employee Portal</button>
+          <button className="px-5 py-3 text-sm sm:text-base font-semibold rounded-lg shadow-lg bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 transition-transform transform hover:scale-105 duration-300">
+            Employee Portal
+          </button>
         </Link>
         <Link href="/admin">
-          <button style={styles.buttonSecondary}>Admin Panel</button>
+          <button className="px-5 py-3 text-sm sm:text-base font-semibold rounded-lg shadow-lg bg-gradient-to-r from-teal-500 to-teal-600 text-white hover:from-teal-600 hover:to-teal-700 transition-transform transform hover:scale-105 duration-300">
+            Admin Panel
+          </button>
         </Link>
       </div>
+
+      {/* Footer */}
+      <footer className="mt-12 text-gray-500 text-xs">
+        &copy; {new Date().getFullYear()} Employee Review App. All rights reserved.
+      </footer>
     </div>
   );
-};
-
-// Inline Styles
-const styles = {
-  container: {
-    fontFamily: "Arial, sans-serif",
-    color: "#333",
-    textAlign: "center" as const,
-    backgroundColor: "#f9f9f9",
-    minHeight: "100vh",
-    display: "flex",
-    flexDirection: "column" as const,
-    justifyContent: "space-between",
-  },
-  hero: {
-    position: "relative" as const,
-    width: "100%",
-    height: "60vh",
-    overflow: "hidden" as const,
-  },
-  heroImage: {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover" as const,
-  },
-  overlay: {
-    position: "absolute" as const,
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    color: "#fff",
-    padding: "20px 40px",
-    borderRadius: "8px",
-  },
-  title: {
-    fontSize: "36px",
-    marginBottom: "10px",
-    fontWeight: "bold" as const,
-  },
-  description: {
-    fontSize: "18px",
-    lineHeight: "1.5",
-    margin: 0,
-  },
-  linksContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "20px",
-    margin: "40px 0",
-  },
-  button: {
-    padding: "15px 30px",
-    fontSize: "18px",
-    backgroundColor: "#007bff",
-    color: "#fff",
-    border: "none",
-    borderRadius: "6px",
-    cursor: "pointer",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    transition: "background-color 0.3s",
-  },
-  buttonSecondary: {
-    padding: "15px 30px",
-    fontSize: "18px",
-    backgroundColor: "#28a745",
-    color: "#fff",
-    border: "none",
-    borderRadius: "6px",
-    cursor: "pointer",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    transition: "background-color 0.3s",
-  },
 };
 
 export default LandingPage;
