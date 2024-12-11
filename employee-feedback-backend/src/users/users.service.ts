@@ -2,14 +2,32 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from './../users/schema/user.schema';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt'; // JWT module for creating tokens
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private jwtService: JwtService
+  ) {}
 
-  async createUser(name: string, email: string, role: string): Promise<User> {
-    const newUser = new this.userModel({ name, email, role });
+  async createUser(name: string, email: string, password: string, role: string): Promise<User> {
+    const newUser = new this.userModel({ name, email, password, role });
     return newUser.save();
+  }
+
+    async validateUser(email: string, password: string): Promise<User | null> {
+      const user = await this.userModel.findOne({ email }).select('+password');
+      if (user && (await bcrypt.compare(password, user.password))) {
+        return user; // Password is valid
+      }
+      return null;
+    }
+
+  async generateToken(user: User): Promise<string> {
+    const payload = { id: user.id, email: user.email, role: user.role };
+    return this.jwtService.sign(payload);
   }
 
   async findAll(): Promise<User[]> {
@@ -18,6 +36,10 @@ export class UsersService {
 
   async findById(id: string): Promise<User> {
     return this.userModel.findById(id).exec();
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    return this.userModel.findOne({ email }).exec();
   }
 
   async updateUser(id: string, updateData: Partial<User>): Promise<User> {

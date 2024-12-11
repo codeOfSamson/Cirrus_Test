@@ -9,6 +9,11 @@ type User {
   role: String!
 }
 
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
 type Review {
   id: ID!
   reviewer: String!
@@ -19,12 +24,14 @@ type Review {
 
 type Query {
   getUsers: [User!]!
+  me: User
   getAllReviews: [Review!]!
   getReview(id: String!): Review!
 }
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
+  login(email: String!, password: String!): AuthPayload!
   updateUser(id: String!, updateUserInput: UpdateUserInput!): User!
   deleteUser(id: String!): User!
   createReview(createReviewDto: CreateReviewDto!): Review!
@@ -35,12 +42,14 @@ type Mutation {
 input CreateUserInput {
   name: String!
   email: String!
+  password: String!
   role: String!
 }
 
 input UpdateUserInput {
   name: String
   email: String
+  password: String
   role: String
 }
 
