@@ -1,15 +1,43 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import Login from "./components/Login";
+import Register from "./components/Register";
+
 const LandingPage = () => {
-  const { user } = useAuth(); // Access the user session from context
-console.log(user)
+  const { user } = useAuth(); 
+  const [isLogin, setIsLogin] = useState(true); 
+
+
   if (!user?.isLoggedIn) {
-    return <Login />; // Show the login component if user is not logged in
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 text-gray-800">
+        {/* Toggle Between Login and Register */}
+        <div className="mb-6">
+          <button
+            onClick={() => setIsLogin(true)}
+            className={`px-4 py-2 ${
+              isLogin ? "font-bold underline" : "text-gray-500"
+            }`}
+          >
+            Login
+          </button>
+          <button
+            onClick={() => setIsLogin(false)}
+            className={`px-4 py-2 ${
+              !isLogin ? "font-bold underline" : "text-gray-500"
+            }`}
+          >
+            Register
+          </button>
+        </div>
+
+        {isLogin ? <Login /> : <Register />}
+      </div>
+    );
   }
 
   return (
@@ -24,20 +52,6 @@ console.log(user)
             Empower your team with transparency and insights!
           </p>
         </header>
-
-        {/* Hero Section */}
-        <div className="relative w-full max-w-5xl h-[50vh] rounded-lg overflow-hidden shadow-lg">
-          <img
-            src="https://t2binteriors.com/wp-content/uploads/2022/02/elevated-view-of-a-busy-open-plan-office-2021-08-26-16-14-58-utc.jpg"
-            alt="Modern Office"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-            <p className="text-white text-center text-sm sm:text-base max-w-xl leading-relaxed">
-              A seamless solution to manage employee reviews and feedback. Transform how your team collaborates and grows.
-            </p>
-          </div>
-        </div>
 
         {/* Button Links */}
         <div className="mt-10 flex gap-4">

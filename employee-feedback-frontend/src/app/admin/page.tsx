@@ -2,20 +2,20 @@
 
 import React, { useState , Context} from "react";
 import Link from "next/link";
-import { useSearchParams } from 'next/navigation'; // For Next.js 13
+//import { useSearchParams } from 'next/navigation'; // For Next.js 13
 
 
 const AdminLandingPage = () => {
 
-  const searchParams = useSearchParams(); // Next.js 13+
-  const userName = searchParams.get('name');
+  //const searchParams = useSearchParams(); // Next.js 13+
+  //const userName = searchParams.get('name');
 
 
   // Admin Dashboard
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <h1 className="text-4xl font-bold text-center text-gray-800 mb-10">
-        Welcome to the Admin Panel, {userName}
+        Welcome to the Admin Panel
       </h1>
 
       <div className="flex flex-wrap justify-center gap-8">
