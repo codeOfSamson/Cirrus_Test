@@ -13,16 +13,21 @@ export class AuthService {
 
   // Login Method
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.usersService.findByEmail(email); // Fetch user from DB
+    const user = await this.usersService.findByEmail(email);
+    console.log(user)
+    // Fetch user from DB
     if (user && (await bcrypt.compare(password, user.password))) {
       const { password, ...result } = user;
       return result; // Return user details excluding password
     }
+    console.log(2, user)
+
     throw new UnauthorizedException('Invalid email or password');
   }
 
   // Generate JWT token
   async login(user: User) {
+    console.log(3, user)
     const payload = { email: user.email, sub: user.id, role: user.role };
     return {
       access_token: this.jwtService.sign(payload),

@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from './../users/schema/user.schema';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt'; // JWT module for creating tokens
+import { JwtService } from '@nestjs/jwt'; 
 
 @Injectable()
 export class UsersService {
@@ -17,13 +17,18 @@ export class UsersService {
     return newUser.save();
   }
 
-    async validateUser(email: string, password: string): Promise<User | null> {
-      const user = await this.userModel.findOne({ email }).select('+password');
-      if (user && (await bcrypt.compare(password, user.password))) {
-        return user; // Password is valid
-      }
-      return null;
+  async validateUser(email: string, password: string): Promise<string> {
+    const user = await this.findByEmail(email);
+    
+    console.log(12345, user)// Assume findByEmail finds a user
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const payload = { id: user.id, email: user.email, role: user.role };
+      return this.jwtService.sign(payload); 
     }
+    console.log(12345, user)// Assume findByEmail finds a user
+
+    throw new UnauthorizedException('Invalid credentials');
+  }
 
   async generateToken(user: User): Promise<string> {
     const payload = { id: user.id, email: user.email, role: user.role };
@@ -39,7 +44,7 @@ export class UsersService {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.userModel.findOne({ email }).exec();
+    return this.userModel.findOne({ email }).select('+password').exec();
   }
 
   async updateUser(id: string, updateData: Partial<User>): Promise<User> {
