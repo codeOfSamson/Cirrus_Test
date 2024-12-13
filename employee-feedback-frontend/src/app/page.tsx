@@ -7,10 +7,11 @@ import PrivateRoute from "./components/PrivateRoute";
 import Login from "./components/Login";
 import Register from "./components/Register";
 
+
 const LandingPage = () => {
   const { user } = useAuth(); 
+  const { logout } = useAuth(); 
   const [isLogin, setIsLogin] = useState(true); 
-
 
   if (!user?.isLoggedIn) {
     return (
@@ -35,13 +36,20 @@ const LandingPage = () => {
           </button>
         </div>
 
-        {isLogin ? <Login /> : <Register />}
+        {isLogin ? <Login /> : <Register  setIsLogin={setIsLogin}/>}
       </div>
     );
   }
 
   return (
     <PrivateRoute>
+      <div>
+      <div className="topnav">
+  <button 
+   onClick={() => logout()}
+  className="active">Logout</button>
+ 
+  </div>
       <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 text-gray-800">
         {/* Header Section */}
         <header className="text-center mb-6">
@@ -67,10 +75,13 @@ const LandingPage = () => {
           </Link>
         </div>
 
+
         {/* Footer */}
         <footer className="mt-12 text-gray-500 text-xs">
+      
           &copy; {new Date().getFullYear()} Employee Review App. All rights reserved.
         </footer>
+      </div>
       </div>
     </PrivateRoute>
   );

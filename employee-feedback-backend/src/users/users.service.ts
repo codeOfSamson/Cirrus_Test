@@ -20,12 +20,10 @@ export class UsersService {
   async validateUser(email: string, password: string): Promise<string> {
     const user = await this.findByEmail(email);
     
-    console.log(12345, user)// Assume findByEmail finds a user
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { id: user.id, email: user.email, role: user.role };
       return this.jwtService.sign(payload); 
     }
-    console.log(12345, user)// Assume findByEmail finds a user
 
     throw new UnauthorizedException('Invalid credentials');
   }
