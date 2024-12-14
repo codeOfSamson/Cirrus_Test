@@ -13,6 +13,7 @@ const LandingPage = () => {
   const { logout } = useAuth(); 
   const [isLogin, setIsLogin] = useState(true); 
 
+  console.log(user)
   if (!user?.isLoggedIn) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 text-gray-800">

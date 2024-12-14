@@ -6,11 +6,12 @@ import { useRouter } from "next/navigation";
 interface User {
   username: string;
   isLoggedIn: boolean;
+  role: string;
 }
 
 interface AuthContextType {
   user: User;
-  login: (token: string, userData: {username: string}) => void;
+  login: (token: string, userData: {username: string, role: string}) => void;
   logout: () => void;
 }
 
@@ -23,30 +24,33 @@ interface AuthProviderProps {
 // Create a provider to manage auth state
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const router =useRouter()
-  const [user, setUser] = useState<User>({ username: '', isLoggedIn: false });
+  const [user, setUser] = useState<User>({ username: '', isLoggedIn: false, role: ''});
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
+    const role = localStorage.getItem("role");
 
-    if (token && username) {
-      setUser({ username, isLoggedIn: true });
+    if (token && username && role) {
+      setUser({ username, isLoggedIn: true , role: role});
     }
   }, []);
 
-   const login = (token: string, userData: { username: string }) => {
+   const login = (token: string, userData: { username: string, role: string }) => {
     localStorage.setItem("token", token);
     localStorage.setItem("username", userData.username);
+    localStorage.setItem("username", userData.role);
 
-    setUser({ username: userData.username, isLoggedIn: true });
+    setUser({ username: userData.username, isLoggedIn: true, role: userData.role});
     router.push("/"); 
   };
 
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+    localStorage.removeItem("role");
 
-    setUser({ username: "", isLoggedIn: false });
+    setUser({ username: "", isLoggedIn: false, role:''});
     router.push("/"); 
   };
 

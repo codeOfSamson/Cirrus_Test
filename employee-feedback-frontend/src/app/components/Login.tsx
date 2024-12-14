@@ -6,7 +6,15 @@ import { gql, useMutation } from "@apollo/client";
 
 const LOGIN_MUTATION = gql`
   mutation Login($email: String!, $password: String!) {
-    login(email: $email, password: $password)
+    login(email: $email, password: $password){
+    access_token 
+    user {
+    id
+    name
+    email
+    role
+      }
+    }
   }
 `;
 
@@ -20,8 +28,8 @@ const Login = () => {
     e.preventDefault();
     try {
       const { data } = await loginMutation({ variables: { email, password } });
-      
-      login(data.login, {username: email});
+        console.log('check plz', data)
+      login(data.login, {username: email, role: data.login.user.role});
     } catch (err) {
       console.error("Login failed:", err);
     }

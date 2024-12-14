@@ -9,6 +9,11 @@ type User {
   role: String!
 }
 
+type AuthPayload {
+  access_token: String!
+  user: User!
+}
+
 type Review {
   id: ID!
   reviewer: String!
@@ -26,7 +31,7 @@ type Query {
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
-  login(email: String!, password: String!): String!
+  login(email: String!, password: String!): AuthPayload!
   updateUser(id: String!, updateUserInput: UpdateUserInput!): User!
   deleteUser(id: String!): User!
   createReview(createReviewDto: CreateReviewDto!): Review!

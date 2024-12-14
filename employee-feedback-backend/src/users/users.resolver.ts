@@ -1,9 +1,9 @@
-import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Context, ObjectType } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './schema/user.schema';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
-//import { AuthPayload } from './dto/auth-payload.dto';
+import { AuthPayload } from './dto/auth-payload.dto';
 import { GqlAuthGuard } from 'src/auth/guards/GqlAuthGaurd';
 import { UseGuards } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
@@ -30,19 +30,17 @@ export class UsersResolver {
     return this.usersService.createUser(name, email, password, role);
   }
 
-  @Mutation(() => String)
+  @Mutation(() => AuthPayload)
   async login(@Args('email') email: string, @Args('password') password: string) {
-    console.log(123123)
     const user = await this.authService.validateUser(email, password);
-    const { access_token } = await this.authService.login(user); // Generate the JWT after validation
-    return access_token; // Return the JWT as a string
+    const { access_token } = await this.authService.login(user); // Generate the JWT after validation    
+    return {access_token, user}; // Return the JWT as a string
   }
 
   // Me Query
   @Query(() => User, { nullable: true })
   @UseGuards(GqlAuthGuard) // Using custom guard
   async me(@Context('req') req): Promise<User> {
-    console.log('Request Object:', req.user);
     return req.user; 
   }
 

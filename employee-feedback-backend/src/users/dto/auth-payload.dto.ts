@@ -4,7 +4,7 @@ import { User } from '../schema/user.schema';
 @ObjectType()
 export class AuthPayload {
   @Field()
-  token: string;
+  access_token: string;
 
   @Field(() => User)
   user: User;
