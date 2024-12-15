@@ -98,24 +98,24 @@ const ReviewsCRUD = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left Side: Form */}
-        <div className="bg-white p-6 shadow-md rounded-lg">
-          <h2 className="text-xl font-semibold mb-4">
+        <div className="bg-white p-6 shadow-lg rounded-lg">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">
             {form.id ? "Edit Review" : "Create Review"}
           </h2>
           <input
-            className="w-full p-3 mb-4 border rounded-md focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 mb-4 bg-white  text-gray-700 border rounded-md focus:ring-2 focus:ring-blue-500"
             placeholder="Reviewer"
             value={form.reviewer}
             onChange={(e) => setForm({ ...form, reviewer: e.target.value })}
           />
           <input
-            className="w-full p-3 mb-4 border rounded-md focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 mb-4 bg-white  text-gray-700 border rounded-md focus:ring-2 focus:ring-blue-500"
             placeholder="Reviewee"
             value={form.reviewee}
             onChange={(e) => setForm({ ...form, reviewee: e.target.value })}
           />
           <textarea
-            className="w-full p-3 mb-4 border rounded-md focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 mb-4 bg-white  text-gray-700 border rounded-md focus:ring-2 focus:ring-blue-500"
             placeholder="Feedback"
             value={form.feedback}
             onChange={(e) => setForm({ ...form, feedback: e.target.value })}
@@ -137,8 +137,8 @@ const ReviewsCRUD = () => {
         </div>
 
         {/* Right Side: Reviews List */}
-        <div className="bg-white p-6 shadow-md rounded-lg max-h-[80vh] overflow-y-auto">
-          <h2 className="text-xl font-semibold mb-4">Reviews List</h2>
+        <div className="bg-white p-6 shadow-lg rounded-lg max-h-[80vh] overflow-y-auto">
+          <h2 className="text-xl font-semibold mb-4 bg-white  text-gray-700">Reviews List</h2>
           <div className="space-y-4">
             {data.getAllReviews.map((review: any) => (
               <div

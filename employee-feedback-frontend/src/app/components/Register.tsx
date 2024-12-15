@@ -44,26 +44,26 @@ const Register: React.FC<RegisterProps> = ({ setIsLogin }) => {
       <h2 className="text-2xl font-bold mb-4">Register</h2>
       {error && <p className="text-red-500">{error.message}</p>}
       <input
-        className="text-white mb-2 p-2 border border-gray-300 rounded"
-        placeholder="Name"
+          className="mt-1 block w-full px-3 py-2 border  bg-white  text-gray-700  border-gray-300 rounded-lg"
+          placeholder="Name"
         onChange={(e) => setName(e.target.value)}
         value={name}
       />
       <input
-        className="text-white mb-2 p-2 border border-gray-300 rounded"
-        placeholder="Email"
+          className="mt-1 block w-full px-3 py-2 border  bg-white  text-gray-700  border-gray-300 rounded-lg"
+          placeholder="Email"
         onChange={(e) => setEmail(e.target.value)}
         value={email}
       />
       <input
-        className="text-white mb-2 p-2 border border-gray-300 rounded"
+          className="mt-1 block w-full px-3 py-2 border  bg-white  text-gray-700  border-gray-300 rounded-lg"
         placeholder="Role"
         onChange={(e) => setRole(e.target.value)}
         value={role}
       />
       <input
-        className="text-white mb-4 p-2 border border-gray-300 rounded"
-        placeholder="Password"
+          className="mt-1 block w-full px-3 py-2 border  bg-white  text-gray-700  border-gray-300 rounded-lg"
+          placeholder="Password"
         type="password"
         onChange={(e) => setPassword(e.target.value)}
         value={password}
@@ -71,7 +71,7 @@ const Register: React.FC<RegisterProps> = ({ setIsLogin }) => {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        className="w-full mt-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       >
         {loading ? "Registering..." : "Register"}
       </button>

@@ -17,7 +17,14 @@ const LandingPage = () => {
   if (!user?.isLoggedIn) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 text-gray-800">
-        {/* Toggle Between Login and Register */}
+      <header className="text-center mb-6">
+          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+            Employee Review App
+          </h1>
+          <p className="mt-2 text-base text-gray-600 sm:text-lg">
+            Empower your team with transparency and insights!
+          </p>
+        </header>
         <div className="mb-6">
           <button
             onClick={() => setIsLogin(true)}

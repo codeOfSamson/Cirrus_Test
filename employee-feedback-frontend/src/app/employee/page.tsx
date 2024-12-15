@@ -1,21 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { gql, useQuery } from "@apollo/client";
 import Link from "next/link";
+import { useAuth } from "../context/AuthContext";
 
-// GraphQL queries
-const GET_EMPLOYEES = gql`
-  query GetUsers {
-    getUsers {
-      id
-      name
-      email
-      role
-    }
-  }
-`;
-
+// GraphQL Queries
 const GET_ALL_REVIEWS = gql`
   query GetAllReviews {
     getAllReviews {
@@ -29,86 +19,148 @@ const GET_ALL_REVIEWS = gql`
 `;
 
 const EmployeeLandingPage = () => {
-  const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
-
-  // Fetch employees
-  const { loading: employeesLoading, error: employeesError, data: employeeData } = useQuery(GET_EMPLOYEES);
+  const { user } = useAuth(); // Access logged-in user from AuthContext
+  console.log(123, user)
+  const [selectedReview, setSelectedReview] = useState<any>(null);
 
   // Fetch all reviews
-  const { loading: reviewsLoading, error: reviewsError, data: reviewData } = useQuery(GET_ALL_REVIEWS);
+  const { loading, error, data } = useQuery(GET_ALL_REVIEWS);
 
-  if (employeesLoading || reviewsLoading) return <p>Loading...</p>;
-  if (employeesError) return <p>Error: {employeesError.message}</p>;
-  if (reviewsError) return <p>Error: {reviewsError.message}</p>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
-  const handleEmployeeClick = (employee: any) => {
-    setSelectedEmployee(employee);
-  };
-
-  const handleEditReviewLink = (review: any) => {
-    return `/employee/edit-review?review=${encodeURIComponent(JSON.stringify(review))}`;
-  };
-
-  // Filter reviews based on selected employee
-  const filteredReviews =
-    selectedEmployee &&
-    reviewData.getAllReviews.filter(
-      (review: any) =>
-        review.reviewer === selectedEmployee.name || review.reviewee === selectedEmployee.name
+  if (!user) {
+    return (
+      <div className="p-6 text-center">
+        <p className="text-lg text-red-600">You must be logged in to view this page.</p>
+        <Link href="/" className="text-blue-500 hover:underline">
+          Go to Home Page
+        </Link>
+      </div>
     );
+  }
+
+  // Filter reviews for the logged-in user
+  const reviewsAsReviewer = data.getAllReviews.filter(
+    (review: any) => review.reviewer === user.username
+  );
+
+  const reviewsAsReviewee = data.getAllReviews.filter(
+    (review: any) => review.reviewee === user.username
+  );
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen font-sans">
-      <h1 className="text-4xl text-center text-gray-800 mb-8">Employees (Select one)</h1>
-      <ul className="list-none p-0 m-0">
-        {employeeData.getUsers.map((employee: any) => (
-          <li
-            key={employee.id}
-            onClick={() => handleEmployeeClick(employee)}
-            className="p-3 mb-4 bg-blue-600 text-white text-center cursor-pointer rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            {employee.name} ({employee.role})
-          </li>
-        ))}
-      </ul>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <h1 className="text-4xl font-bold text-center mb-8">Your Reviews</h1>
 
-      {selectedEmployee && (
-        <div className="mt-8 text-left">
-          <h2 className="text-2xl mb-4  text-black">Reviews for {selectedEmployee.name}</h2>
-          {filteredReviews && filteredReviews.length > 0 ? (
-            <ul className="list-none p-0 m-0">
-              {filteredReviews.map((review: any) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Reviews Written */}
+        <div className="bg-white p-6 rounded-lg shadow-lg">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Reviews You Wrote</h2>
+          {reviewsAsReviewer.length > 0 ? (
+            <ul className="space-y-4 max-h-[70vh] overflow-y-auto">
+              {reviewsAsReviewer.map((review: any) => (
                 <li
                   key={review.id}
-                  className="flex items-center text-black justify-between p-4 mb-4 bg-gray-200 rounded-lg"
+                  className="p-4 bg-gray-50 rounded-lg shadow-sm cursor-pointer hover:bg-gray-100 transition"
+                  onClick={() => setSelectedReview(review)}
                 >
-                  <span
-                    className={`w-3 h-3 rounded-full mr-4 inline-block ${
-                      review.status === "PENDING" ? "bg-red-500" : "bg-green-500"
-                    }`}
-                  ></span>
-                  <div>
-                    <strong>Reviewee:</strong> {review.reviewee} <br />
-                    <strong>Reviewer:</strong> {review.reviewer} <br />
-                    <strong>Status:</strong> {review.status}
-                  </div>
-                  <Link href={handleEditReviewLink(review)}>
-                    <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
-                      Edit
-                    </button>
-                  </Link>
+                  <p className="text-gray-700">
+                    <strong>Reviewee:</strong> {review.reviewee}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong>Status:</strong>{" "}
+                    <span
+                      className={`font-semibold ${
+                        review.status === "PENDING" ? "text-red-500" : "text-green-500"
+                      }`}
+                    >
+                      {review.status}
+                    </span>
+                  </p>
                 </li>
               ))}
             </ul>
           ) : (
-            <p>No reviews found for {selectedEmployee.name}</p>
+            <p className="text-gray-600">You haven't written any reviews yet.</p>
           )}
         </div>
-      )}
 
-      <Link href="/" className="mt-6 block text-center text-blue-500 hover:underline">
-        Go to Home Page
-      </Link>
+        {/* Reviews Received */}
+        <div className="bg-white p-6 rounded-lg shadow-lg">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Reviews About You</h2>
+          {reviewsAsReviewee.length > 0 ? (
+            <ul className="space-y-4 max-h-[70vh] overflow-y-auto">
+              {reviewsAsReviewee.map((review: any) => (
+                <li
+                  key={review.id}
+                  className="p-4 bg-gray-50 rounded-lg shadow-sm cursor-pointer hover:bg-gray-100 transition"
+                  onClick={() => setSelectedReview(review)}
+                >
+                  <p className="text-gray-700">
+                    <strong>Reviewer:</strong> {review.reviewer}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong>Status:</strong>{" "}
+                    <span
+                      className={`font-semibold ${
+                        review.status === "PENDING" ? "text-red-500" : "text-green-500"
+                      }`}
+                    >
+                      {review.status}
+                    </span>
+                  </p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-600">You have no reviews yet.</p>
+          )}
+        </div>
+      </div>
+
+      {/* Modal for Review Details */}
+      {selectedReview && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4">
+          <div className="bg-white p-6 rounded-lg max-w-lg w-full relative">
+            <h3 className="text-2xl font-semibold mb-4 text-gray-800">
+              {selectedReview.reviewer === user.username ? "Edit Review" : "Review Details"}
+            </h3>
+            <p className="text-gray-700">
+              <strong>Reviewer:</strong> {selectedReview.reviewer}
+            </p>
+            <p className="text-gray-700">
+              <strong>Reviewee:</strong> {selectedReview.reviewee}
+            </p>
+            <p className="text-gray-700">
+              <strong>Status:</strong>{" "}
+              <span
+                className={`font-semibold ${
+                  selectedReview.status === "PENDING" ? "text-red-500" : "text-green-500"
+                }`}
+              >
+                {selectedReview.status}
+              </span>
+            </p>
+            <textarea
+              className="w-full p-3 mt-4 bg-white text-gray-700 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              readOnly={selectedReview.reviewer !== user.username}
+              defaultValue={selectedReview.feedback}
+            />
+            {selectedReview.reviewer === user.username && (
+              <button className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition">
+                Save Changes
+              </button>
+            )}
+            <button
+              onClick={() => setSelectedReview(null)}
+              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-2xl"
+            >
+              &times;
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -48,7 +48,7 @@ const Login = () => {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 text-white rounded-lg"
+          className="mt-1 block w-full px-3 py-2 border  bg-white  text-gray-700  border-gray-300 rounded-lg"
           required
         />
       </div>
@@ -60,7 +60,7 @@ const Login = () => {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 block w-full px-3 py-2 border border-gray-300  text-white  rounded-lg"
+          className="mt-1 block w-full px-3 py-2 border border-gray-300  bg-white  text-gray-700  rounded-lg"
           required
         />
       </div>
