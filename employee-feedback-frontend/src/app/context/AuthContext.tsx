@@ -42,7 +42,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.setItem("username", userData.role);
 
     setUser({ username: userData.username, isLoggedIn: true, role: userData.role});
-    router.push("/"); 
+    if(userData.role === 'admin'){
+      router.push("/admin"); 
+    } else if (userData.role === 'employee'){
+      router.push("/employee"); 
+    }
   };
 
   const logout = () => {

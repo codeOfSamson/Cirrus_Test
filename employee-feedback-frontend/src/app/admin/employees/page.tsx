@@ -53,6 +53,7 @@ const UsersCRUD = () => {
   const [deleteUser] = useMutation(DELETE_USER);
 
   const [form, setForm] = useState({ id: "", name: "", email: "", role: "" });
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
 
   if (loading) return <p>Loading users...</p>;
   if (error) return <p>Error loading users: {error.message}</p>;
@@ -66,9 +67,10 @@ const UsersCRUD = () => {
 
   const handleUpdate = async () => {
     const { id, name, email, role } = form;
-    await updateUser({ variables: { id: form.id, updateUserInput: { name, email, role } } });
+    await updateUser({ variables: { id, updateUserInput: { name, email, role } } });
     refetch();
     setForm({ id: "", name: "", email: "", role: "" });
+    setEditModalOpen(false);
   };
 
   const handleDelete = async (id: string) => {
@@ -77,67 +79,121 @@ const UsersCRUD = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 bg-gray-100 rounded-lg shadow-lg">
-      <h1 className="text-2xl font-semibold text-center mb-8">User Management</h1>
+    <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
+      <h1 className="text-3xl font-bold text-gray-700 text-center mb-8">
+        User Management
+      </h1>
 
-      <ul className="space-y-4">
-        {data.getUsers.map((user: any) => (
-          <li key={user.id} className="flex justify-between items-center p-4 bg-white border rounded-md shadow-sm">
-            <span>
-              {user.name} - {user.email} ({user.role})
-            </span>
-            <div>
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-blue-600"
-                onClick={() => setForm(user)}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Left Side: Form */}
+        <div className="bg-white p-6 shadow-md rounded-lg">
+          <h2 className="text-xl font-semibold mb-4  text-gray-700 ">
+            {form.id ? "Edit User" : "Create User"}
+          </h2>
+          <input
+            className="w-full p-3 mb-4 bg-white border  text-gray-700  rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Name"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+          />
+          <input
+            className="w-full p-3 mb-4 bg-white  text-gray-700 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Email"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+          />
+          <select
+            className="w-full p-3 mb-4 bg-white  text-gray-700  border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={form.role}
+            onChange={(e) => setForm({ ...form, role: e.target.value })}
+          >
+            <option value="">Select Role</option>
+            <option value="admin">Admin</option>
+            <option value="employee">Employee</option>
+          </select>
+          <button
+            onClick={form.id ? handleUpdate : handleCreate}
+            className="w-full bg-green-500 text-white py-3 rounded-md hover:bg-green-600 transition duration-200"
+          >
+            {form.id ? "Update User" : "Create User"}
+          </button>
+        </div>
+
+        {/* Right Side: Users List */}
+        <div className="bg-white p-6 shadow-md rounded-lg   ">
+          <h2 className="text-xl  text-gray-700  font-semibold mb-4">Users List</h2>
+          <div className="space-y-4 max-h-[80vh] overflow-y-auto">
+            {data.getUsers.map((user: any) => (
+              <div
+                key={user.id}
+                className="flex justify-between overflow-scroll items-center bg-gray-200 p-4 rounded-md shadow-md hover:bg-gray-100 transition duration-200"
               >
-                Edit
-              </button>
-              <button
-                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-                onClick={() => handleDelete(user.id)}
-              >
-                Delete
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
-
-      <div className="mt-8 p-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold mb-4">{form.id ? "Update User" : "Create User"}</h2>
-
-        <input
-          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Name"
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-        />
-        <input
-          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Email"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-        />
-
-        <select
-          name="role"
-          value={form.role}
-          onChange={(e) => setForm({ ...form, role: e.target.value })}
-          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="admin">Admin</option>
-          <option value="employee">Employee</option>
-        </select>
-
-        <button
-          className="w-full p-3 bg-green-500 text-white rounded-md hover:bg-green-600"
-          onClick={form.id ? handleUpdate : handleCreate}
-        >
-          {form.id ? "Update" : "Create"}
-        </button>
+                <div>
+                  <p className="font-semibold text-gray-800">{user.name}</p>
+                  <p className="text-gray-600 text-sm">
+                    {user.email} ({user.role})
+                  </p>
+                </div>
+                <div>
+                  <button
+                    onClick={() => {
+                      setForm(user);
+                      setEditModalOpen(true);
+                    }}
+                    className="text-blue-500 hover:underline mr-4"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(user.id)}
+                    className="text-red-500 hover:underline"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-      <Link href="/admin" className="block text-center mt-4 text-blue-500 hover:underline">
+
+      {/* Edit Modal */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+            <h2 className="text-xl font-bold  text-gray-700 mb-4">Edit User</h2>
+            <input
+              className="w-full p-3 mb-4 border  bg-white  text-gray-700 rounded-md focus:ring-2 focus:ring-blue-500"
+              placeholder="Name"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
+            <input
+              className="w-full p-3 mb-4 border  bg-white  text-gray-700 rounded-md focus:ring-2 focus:ring-blue-500"
+              placeholder="Email"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+            />
+            <button
+              onClick={handleUpdate}
+              className="w-full bg-blue-500 text-white py-3 rounded-md hover:bg-blue-600"
+            >
+              Update User
+            </button>
+            <button
+              onClick={() => {
+                setEditModalOpen(false);
+                setForm({ id: "", name: "", email: "", role: "" });
+              }}
+              className="w-full mt-2 text-gray-500 hover:underline text-center"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      <Link href="/admin" className="block text-center mt-8 text-blue-500 hover:underline">
         Go Back
       </Link>
     </div>
@@ -145,4 +201,3 @@ const UsersCRUD = () => {
 };
 
 export default UsersCRUD;
-
