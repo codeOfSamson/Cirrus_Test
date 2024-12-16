@@ -55,12 +55,15 @@ const Register: React.FC<RegisterProps> = ({ setIsLogin }) => {
         onChange={(e) => setEmail(e.target.value)}
         value={email}
       />
-      <input
+     <select
           className="mt-1 block w-full px-3 py-2 border  bg-white  text-gray-700  border-gray-300 rounded-lg"
-        placeholder="Role"
-        onChange={(e) => setRole(e.target.value)}
-        value={role}
-      />
+          value={role}
+            onChange={(e) => setRole(e.target.value )}
+          >
+            <option value="">Select Role</option>
+            <option value="admin">Admin</option>
+            <option value="employee">Employee</option>
+          </select>
       <input
           className="mt-1 block w-full px-3 py-2 border  bg-white  text-gray-700  border-gray-300 rounded-lg"
           placeholder="Password"

@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useContext, useState, useEffect } from "react";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
-//import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 // GraphQL Queries
 const GET_ALL_REVIEWS = gql`
@@ -18,32 +18,48 @@ const GET_ALL_REVIEWS = gql`
   }
 `;
 
-const EmployeeLandingPage = () => {
-  //const { user } = useAuth(); // Access logged-in user from AuthContext
-  const [selectedReview, setSelectedReview] = useState<any>(null);
+const UPDATE_REVIEW_MUTATION = gql`
+  mutation UpdateReview($id: String!, $updateReviewDto: UpdateReviewDto!) {
+    updateReview(id: $id, updateReviewDto: $updateReviewDto) {
+      id
+      feedback
+      status
+      reviewer
+      reviewee
+    }
+  }
+`;
 
-  const [user, setUser] = useState({ username: '', isLoggedIn: false, role: ''});
+const EmployeeLandingPage = () => {
+  const [selectedReview, setSelectedReview] = useState<any>(null);
+  const [editableFeedback, setEditableFeedback] = useState<string>("");
+
+  const { logout } = useAuth(); 
+
+  const [user, setUser] = useState({ username: "", isLoggedIn: false, role: "" });
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
     const role = localStorage.getItem("role");
 
-
-    console.log(123, username)
-    console.log(123, role)
     if (token && username && role) {
-      setUser({ username, isLoggedIn: true , role: role});
+      setUser({ username, isLoggedIn: true, role });
     }
   }, []);
 
-  const { loading, error, data } = useQuery(GET_ALL_REVIEWS);
-  console.log(user)
-  console.log('data',data)
+  console.log(1,selectedReview?.reviewee)
+  console.log(2,user)
+  // Fetch reviews
+  const { loading, error, data, refetch } = useQuery(GET_ALL_REVIEWS);
+
+  // Mutation for updating reviews
+  const [updateReview] = useMutation(UPDATE_REVIEW_MUTATION);
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  if (!user) {
+  if (!user.isLoggedIn) {
     return (
       <div className="p-6 text-center">
         <p className="text-lg text-red-600">You must be logged in to view this page.</p>
@@ -62,8 +78,36 @@ const EmployeeLandingPage = () => {
     (review: any) => review.reviewee === user.username
   );
 
+  const handleSaveChanges = async () => {
+    if (!selectedReview) return;
+
+    try {
+      await updateReview({
+        variables: {
+          id: selectedReview.id,
+          updateReviewDto:{
+            reviewer: selectedReview.reviewer,
+            reviewee: selectedReview.reviewee,
+            status:  editableFeedback !== "" ? 'COMPLETED': "PENDING", 
+            feedback: editableFeedback, 
+          }
+        },
+      });
+      await refetch();
+      setSelectedReview(null); 
+    } catch (err) {
+      console.error("Failed to update review:", err);
+    }
+  };
+
   return (
     <div className="p-6 bg-gray-100 text-gray-700 min-h-screen">
+          <div className="topnav">
+  <button 
+   onClick={() => logout()}
+  className="active">Logout</button>
+ 
+  </div>
       <h1 className="text-4xl font-bold text-center mb-8">Your Reviews</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -76,7 +120,10 @@ const EmployeeLandingPage = () => {
                 <li
                   key={review.id}
                   className="p-4 bg-gray-50 rounded-lg shadow-sm cursor-pointer hover:bg-gray-100 transition"
-                  onClick={() => setSelectedReview(review)}
+                  onClick={() => {
+                    setSelectedReview(review);
+                    setEditableFeedback(review.feedback); // Load existing feedback into state
+                  }}
                 >
                   <p className="text-gray-700">
                     <strong>Reviewee:</strong> {review.reviewee}
@@ -106,9 +153,9 @@ const EmployeeLandingPage = () => {
             <ul className="space-y-4 max-h-[70vh] overflow-y-auto">
               {reviewsAsReviewee.map((review: any) => (
                 <li
+                onClick={() => setSelectedReview(review)}
                   key={review.id}
                   className="p-4 bg-gray-50 rounded-lg shadow-sm cursor-pointer hover:bg-gray-100 transition"
-                  onClick={() => setSelectedReview(review)}
                 >
                   <p className="text-gray-700">
                     <strong>Reviewer:</strong> {review.reviewer}
@@ -132,12 +179,12 @@ const EmployeeLandingPage = () => {
         </div>
       </div>
 
-      {/* Modal for Review Details */}
+      {/* Modal for Editing Review */}
       {selectedReview && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4">
           <div className="bg-white p-6 rounded-lg max-w-lg w-full relative">
             <h3 className="text-2xl font-semibold mb-4 text-gray-800">
-              {selectedReview.reviewer === user.username ? "Edit Review" : "Review Details"}
+              Edit Review
             </h3>
             <p className="text-gray-700">
               <strong>Reviewer:</strong> {selectedReview.reviewer}
@@ -145,7 +192,7 @@ const EmployeeLandingPage = () => {
             <p className="text-gray-700">
               <strong>Reviewee:</strong> {selectedReview.reviewee}
             </p>
-            <p className="text-gray-700">
+            <p className="text-gray-700 mb-4">
               <strong>Status:</strong>{" "}
               <span
                 className={`font-semibold ${
@@ -156,24 +203,41 @@ const EmployeeLandingPage = () => {
               </span>
             </p>
             <textarea
-              className="w-full p-3 mt-4 bg-white text-gray-700 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              readOnly={selectedReview.reviewer !== user.username}
-              defaultValue={selectedReview.feedback}
+              className="w-full p-3 bg-white text-gray-700 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              value={editableFeedback ? editableFeedback : selectedReview.feedback}
+              readOnly={selectedReview.reviewee === user.username}
+
+              onChange={(e) => setEditableFeedback(e.target.value)}
             />
-            {selectedReview.reviewer === user.username && (
-              <button className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition">
-                Save Changes
+            <div className="flex justify-end space-x-4 mt-4">
+            
+            {selectedReview.reviewer === user.username && selectedReview.reviewee !== user.username && (
+                  <button
+                    onClick={handleSaveChanges}
+                    className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition"
+                  >
+                    Save Changes
+                  </button>
+                )}
+              <button
+                onClick={() => setSelectedReview(null)}
+                className="mt-4 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 transition"
+              >
+                Cancel
               </button>
-            )}
-            <button
+            </div>
+            {selectedReview.reviewee === user.username ? null :  <button
               onClick={() => setSelectedReview(null)}
+              disabled={selectedReview.reviewee === user.username}
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-2xl"
             >
               &times;
-            </button>
+            </button>}
+           
           </div>
         </div>
       )}
+    
     </div>
   );
 };

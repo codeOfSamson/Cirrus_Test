@@ -76,7 +76,8 @@ const ReviewsCRUD = () => {
   };
 
   const handleUpdate = async () => {
-    const { id, reviewer, reviewee, feedback, status } = form;
+    const { id, reviewer, reviewee, feedback,  } = form;
+    const status = feedback === "" ? "PENDING" : "COMPLETED"
     await updateReview({
       variables: { id, updateReviewDto: { reviewer, reviewee, feedback, status } },
     });
@@ -120,19 +121,32 @@ const ReviewsCRUD = () => {
             value={form.feedback}
             onChange={(e) => setForm({ ...form, feedback: e.target.value })}
           />
-          {form.id && (
+          {/* {form.id && (
             <input
               className="w-full p-3 mb-4 border rounded-md focus:ring-2 focus:ring-blue-500"
               placeholder="Status: PENDING or COMPLETED"
               value={form.status}
               onChange={(e) => setForm({ ...form, status: e.target.value })}
             />
-          )}
+          )} */}
           <button
             onClick={form.id ? handleUpdate : handleCreate}
-            className="w-full bg-green-500 text-white py-3 rounded-md hover:bg-green-600 transition duration-200"
+            className="w-full bg-green-500 mb-2 text-white py-3 rounded-md hover:bg-green-600 transition duration-200"
           >
             {form.id ? "Update Review" : "Create Review"}
+          </button>
+          <button
+   onClick={() => setForm({
+    id: "",
+    reviewer: "",
+    reviewee: "",
+    feedback: "",
+    status: "",
+  })}
+
+            className="w-full bg-red-500 text-white py-3 rounded-md hover:bg-green-600 transition duration-200"
+            >
+            Cancel
           </button>
         </div>
 
@@ -188,12 +202,12 @@ const ReviewsCRUD = () => {
         </div>
       </div>
 
-      <Link
-        href="/admin"
-        className="block text-center mt-8 text-blue-500 hover:underline"
-      >
-        Go Back
-      </Link>
+      <button
+  onClick={() => window.history.back()}
+  className="block text-center mt-8 text-blue-500 hover:underline"
+>
+  Go Back
+</button>
     </div>
   );
 };

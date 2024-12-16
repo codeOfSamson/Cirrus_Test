@@ -16,13 +16,7 @@ const LandingPage = () => {
   if (!user?.isLoggedIn) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 text-gray-800">
-         <div >
-          <button 
-   onClick={() => logout()}
-  className="active">Logout</button>
- 
-  </div>
-
+         
       <header className="text-center mb-6">
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
             Employee Review App
@@ -68,7 +62,7 @@ const LandingPage = () => {
         {/* Header Section */}
         <header className="text-center mb-6">
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-            Employee Review Appa
+            Employee Review App
           </h1>
           <p className="mt-2 text-base text-gray-600 sm:text-lg">
             Empower your team with transparency and insights!
@@ -84,7 +78,7 @@ const LandingPage = () => {
           </Link>
           <Link href={`/admin/?name=${user.username}`}>
             <button className="px-5 py-3 text-sm sm:text-base font-semibold rounded-lg shadow-lg bg-gradient-to-r from-teal-500 to-teal-600 text-white hover:from-teal-600 hover:to-teal-700 transition-transform transform hover:scale-105 duration-300">
-              Admin Panel
+              Admin Panes
             </button>
           </Link>
         </div>
