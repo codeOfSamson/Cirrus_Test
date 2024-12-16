@@ -11,7 +11,7 @@ interface User {
 
 interface AuthContextType {
   user: User;
-  login: (token: string, userData: {username: string, role: string}) => void;
+  login: (userData: {  token: string, user: {email: string, id: string, name: string, role: string }}) => void;
   logout: () => void;
 }
 
@@ -36,15 +36,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
-   const login = (token: string, userData: { username: string, role: string }) => {
-    localStorage.setItem("token", token);
-    localStorage.setItem("username", userData.username);
-    localStorage.setItem("username", userData.role);
+console.log(user)
 
-    setUser({ username: userData.username, isLoggedIn: true, role: userData.role});
-    if(userData.role === 'admin'){
+   const login = ( userData: {  token: string, user: {email: string, id: string, name: string, role: string }}) => {
+    localStorage.setItem("token", userData.token);
+    localStorage.setItem("username", userData.user.name);
+    localStorage.setItem("role", userData.user.role);
+
+    setUser({ username: userData.user.name, isLoggedIn: true, role: userData.user.role});
+    if(userData.user.role === 'admin'){
       router.push("/admin"); 
-    } else if (userData.role === 'employee'){
+    } else if (userData.user.role === 'employee'){
       router.push("/employee"); 
     }
   };

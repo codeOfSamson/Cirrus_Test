@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { gql, useQuery } from "@apollo/client";
 import Link from "next/link";
-import { useAuth } from "../context/AuthContext";
+//import { useAuth } from "../context/AuthContext";
 
 // GraphQL Queries
 const GET_ALL_REVIEWS = gql`
@@ -19,13 +19,27 @@ const GET_ALL_REVIEWS = gql`
 `;
 
 const EmployeeLandingPage = () => {
-  const { user } = useAuth(); // Access logged-in user from AuthContext
-  console.log(123, user)
+  //const { user } = useAuth(); // Access logged-in user from AuthContext
   const [selectedReview, setSelectedReview] = useState<any>(null);
 
-  // Fetch all reviews
-  const { loading, error, data } = useQuery(GET_ALL_REVIEWS);
+  const [user, setUser] = useState({ username: '', isLoggedIn: false, role: ''});
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const username = localStorage.getItem("username");
+    const role = localStorage.getItem("role");
+
+
+    console.log(123, username)
+    console.log(123, role)
+    if (token && username && role) {
+      setUser({ username, isLoggedIn: true , role: role});
+    }
+  }, []);
+
+  const { loading, error, data } = useQuery(GET_ALL_REVIEWS);
+  console.log(user)
+  console.log('data',data)
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
@@ -40,7 +54,6 @@ const EmployeeLandingPage = () => {
     );
   }
 
-  // Filter reviews for the logged-in user
   const reviewsAsReviewer = data.getAllReviews.filter(
     (review: any) => review.reviewer === user.username
   );
@@ -50,7 +63,7 @@ const EmployeeLandingPage = () => {
   );
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className="p-6 bg-gray-100 text-gray-700 min-h-screen">
       <h1 className="text-4xl font-bold text-center mb-8">Your Reviews</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

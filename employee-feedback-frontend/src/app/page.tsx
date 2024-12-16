@@ -13,10 +13,16 @@ const LandingPage = () => {
   const { logout } = useAuth(); 
   const [isLogin, setIsLogin] = useState(true); 
 
-  console.log(user)
   if (!user?.isLoggedIn) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 text-gray-800">
+         <div >
+          <button 
+   onClick={() => logout()}
+  className="active">Logout</button>
+ 
+  </div>
+
       <header className="text-center mb-6">
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
             Employee Review App
@@ -62,7 +68,7 @@ const LandingPage = () => {
         {/* Header Section */}
         <header className="text-center mb-6">
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-            Employee Review App
+            Employee Review Appa
           </h1>
           <p className="mt-2 text-base text-gray-600 sm:text-lg">
             Empower your team with transparency and insights!

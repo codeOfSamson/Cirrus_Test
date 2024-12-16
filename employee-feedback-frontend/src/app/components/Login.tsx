@@ -22,14 +22,14 @@ const Login = () => {
   const { login } = useAuth(); // From AuthContext
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [loginMutation, { loading, error }] = useMutation(LOGIN_MUTATION);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { data } = await loginMutation({ variables: { email, password } });
-        console.log('check plz', data)
-      login(data.login, {username: email, role: data.login.user.role});
+      const { data } = await loginMutation({ variables: { email, password } });       
+       login(data.login);
     } catch (err) {
       console.error("Login failed:", err);
     }
