@@ -10,7 +10,6 @@ import Register from "./components/Register";
 
 const LandingPage = () => {
   const { user } = useAuth(); 
-  const { logout } = useAuth(); 
   const [isLogin, setIsLogin] = useState(true); 
 
   if (!user?.isLoggedIn) {

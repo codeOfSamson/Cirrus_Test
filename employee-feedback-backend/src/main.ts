@@ -6,21 +6,21 @@ import { Reflector } from '@nestjs/core';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
- 
-      // Enable CORS
+  const PORT = process.env.PORT || 4000; // Default to port 4000
+
       app.enableCors({
-        origin: "http://localhost:3001", // Frontend URL
+        origin: "http://localhost:3000", // Frontend URL
         credentials: true,  
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-        allowedHeaders: 'Content-Type, Authorization',            // Allow cookies, if needed
+        allowedHeaders: 'Content-Type, Authorization',       
       });
-   
     
   // Apply the global JWT guard
   const reflector = app.get(Reflector);
   //app.useGlobalGuards(new JwtAuthGuard(reflector));
 
+    await app.listen(PORT);
+    console.log(`Backend is running on http://localhost:${PORT}`);
 
-    await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

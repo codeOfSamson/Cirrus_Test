@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     setUser({ username: userData.user.name, isLoggedIn: true, role: userData.user.role});
     if(userData.user.role === 'admin'){
-      router.push("/admin"); 
+      router.push("/"); 
     } else if (userData.user.role === 'employee'){
       router.push("/employee"); 
     }
