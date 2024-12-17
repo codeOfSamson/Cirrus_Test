@@ -19,7 +19,7 @@ const LOGIN_MUTATION = gql`
 `;
 
 const Login = () => {
-  const { login } = useAuth(); // From AuthContext
+  const { login } = useAuth(); //Auth Login
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 

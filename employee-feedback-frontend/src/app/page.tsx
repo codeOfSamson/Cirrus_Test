@@ -52,12 +52,6 @@ const LandingPage = () => {
   return (
     <PrivateRoute>
       <div>
-      <div className="topnav">
-  <button 
-   onClick={() => logout()}
-  className="active">Logout</button>
- 
-  </div>
       <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 text-gray-800">
         {/* Header Section */}
         <header className="text-center mb-6">

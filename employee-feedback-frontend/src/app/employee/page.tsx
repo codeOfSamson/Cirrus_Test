@@ -3,7 +3,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
-import { useAuth } from "../context/AuthContext";
 
 // GraphQL Queries
 const GET_ALL_REVIEWS = gql`
@@ -34,8 +33,6 @@ const EmployeeLandingPage = () => {
   const [selectedReview, setSelectedReview] = useState<any>(null);
   const [editableFeedback, setEditableFeedback] = useState<string>("");
 
-  const { logout } = useAuth(); 
-
   const [user, setUser] = useState({ username: "", isLoggedIn: false, role: "" });
 
   useEffect(() => {
@@ -48,8 +45,6 @@ const EmployeeLandingPage = () => {
     }
   }, []);
 
-  console.log(1,selectedReview?.reviewee)
-  console.log(2,user)
   // Fetch reviews
   const { loading, error, data, refetch } = useQuery(GET_ALL_REVIEWS);
 
@@ -102,12 +97,6 @@ const EmployeeLandingPage = () => {
 
   return (
     <div className="p-6 bg-gray-100 text-gray-700 min-h-screen">
-          <div className="topnav">
-  <button 
-   onClick={() => logout()}
-  className="active">Logout</button>
- 
-  </div>
       <h1 className="text-4xl font-bold text-center mb-8">Your Reviews</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
