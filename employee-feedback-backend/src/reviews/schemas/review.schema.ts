@@ -24,7 +24,10 @@ export class Review {
 
   @Prop()
   @Field(() => String, { nullable: true }) // Nullable in GraphQL
-  feedback?: string;
+  feedback?: string;@Prop()
+
+  @Field(() => Number, { nullable: true }) // Nullable in GraphQL
+  rating?: Number;
 }
 
 export const ReviewSchema = SchemaFactory.createForClass(Review);
