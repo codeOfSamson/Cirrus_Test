@@ -11,11 +11,15 @@ export class ReviewsService {
 
   async create(createReviewDto: CreateReviewDto): Promise<Review> {
     const newReview = new this.reviewModel(createReviewDto);
+    console.log('nr', newReview)
     return newReview.save();
   }
 
   async findAll(): Promise<Review[]> {
-    return this.reviewModel.find().exec();
+    return this.reviewModel.find()
+    .populate('reviewer')
+    .populate('reviewee')
+    .exec();
   }
 
   async findOne(id: string): Promise<Review> {

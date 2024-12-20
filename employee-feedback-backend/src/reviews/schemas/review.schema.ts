@@ -1,6 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { Field, ObjectType, ID } from '@nestjs/graphql';
+import { User } from 'src/users/schema/user.schema';
+import { Schema as MongooseSchema } from 'mongoose'; // Import Schema from mongoose for ObjectId
+
 
 export type ReviewDocument = Review & Document;
 
@@ -10,13 +13,13 @@ export class Review {
   @Field(() => ID) // Marks this as a GraphQL ID field
   id: string;
 
-  @Prop({ required: true })
-  @Field(() => String) // Exposes this as a String in the GraphQL schema
-  reviewer: string;
+  @Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'User' })
+  @Field(() => User) // Exposes this as a reference to the User in GraphQL
+  reviewer: User; // This field now references a User object
 
-  @Prop({ required: true })
-  @Field(() => String)
-  reviewee: string;
+  @Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'User' })
+  @Field(() => User) // Exposes this as a reference to the User in GraphQL
+  reviewee: User; // This field now references a User object
 
   @Prop({ enum: ['PENDING', 'COMPLETED'], default: 'PENDING' })
   @Field(() => String)
@@ -24,10 +27,11 @@ export class Review {
 
   @Prop()
   @Field(() => String, { nullable: true }) // Nullable in GraphQL
-  feedback?: string;@Prop()
+  feedback?: string;
 
+  @Prop()
   @Field(() => Number, { nullable: true }) // Nullable in GraphQL
-  rating?: Number;
+  rating?: number;
 }
 
 export const ReviewSchema = SchemaFactory.createForClass(Review);

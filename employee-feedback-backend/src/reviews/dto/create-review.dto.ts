@@ -1,17 +1,18 @@
-import { Field, InputType , Int} from '@nestjs/graphql';
-import { IsEnum, Min, Max, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Field, InputType , Int, ID} from '@nestjs/graphql';
+import { IsEnum, Min, Max, IsNotEmpty, IsOptional, IsString, IsMongoId } from 'class-validator';
 
 @InputType()
 export class CreateReviewDto {
-  @Field() 
+  @Field(() => ID)
   @IsNotEmpty()
-  @IsString()
-  reviewer: string;
+  @IsMongoId() // Ensure the value is a valid MongoDB ObjectId
+  reviewer: string; // This will be the ObjectId of the reviewer (User)
 
-  @Field()
+  @Field(() => ID)
   @IsNotEmpty()
-  @IsString()
-  reviewee: string;
+  @IsMongoId() // Ensure the value is a valid MongoDB ObjectId
+  reviewee: string; // This will be the ObjectId of the reviewee (User)
+
 
   @Field({ nullable: true }) // Optional field
   @IsOptional()
