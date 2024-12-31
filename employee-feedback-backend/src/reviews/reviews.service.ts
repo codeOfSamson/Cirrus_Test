@@ -33,6 +33,8 @@ export class ReviewsService {
   async update(id: string, updateReviewDto: UpdateReviewDto): Promise<Review> {
     const updatedReview = await this.reviewModel
       .findByIdAndUpdate(id, updateReviewDto, { new: true })
+      .populate('reviewer') // Populate reviewer field
+      .populate('reviewee')
       .exec();
 
     if (!updatedReview) {

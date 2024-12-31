@@ -13,11 +13,11 @@ export class Review {
   @Field(() => ID) // Marks this as a GraphQL ID field
   id: string;
 
-  @Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'User' })
+  @Prop({ nullable: true, type: MongooseSchema.Types.ObjectId, ref: 'User' })
   @Field(() => User) // Exposes this as a reference to the User in GraphQL
   reviewer: User; // This field now references a User object
 
-  @Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'User' })
+  @Prop({ nullable: true, type: MongooseSchema.Types.ObjectId, ref: 'User' })
   @Field(() => User) // Exposes this as a reference to the User in GraphQL
   reviewee: User; // This field now references a User object
 

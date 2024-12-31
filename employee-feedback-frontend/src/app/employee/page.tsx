@@ -3,18 +3,28 @@
 import React, { useContext, useState, useEffect } from "react";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
+import { useAuth } from "../context/AuthContext";
 
 // GraphQL Queries
 const GET_ALL_REVIEWS = gql`
-  query GetAllReviews {
-    getAllReviews {
+ query {
+  getAllReviews {
+    id
+    reviewer {
       id
-      reviewer
-      reviewee
-      feedback
-      status
+      name
+      email
     }
+    reviewee {
+    id
+      name
+      email
+    }
+    status
+    feedback
+    rating
   }
+}
 `;
 
 const UPDATE_REVIEW_MUTATION = gql`
@@ -23,17 +33,27 @@ const UPDATE_REVIEW_MUTATION = gql`
       id
       feedback
       status
-      reviewer
-      reviewee
+      reviewer {
+        id
+        name
+        email
+      }
+      reviewee {
+        id
+        name
+        email
+      }
     }
   }
 `;
 
+
 const EmployeeLandingPage = () => {
   const [selectedReview, setSelectedReview] = useState<any>(null);
   const [editableFeedback, setEditableFeedback] = useState<string>("");
-
+  console.log(1, selectedReview)
   const [user, setUser] = useState({ username: "", isLoggedIn: false, role: "" });
+  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -47,7 +67,7 @@ const EmployeeLandingPage = () => {
 
   // Fetch reviews
   const { loading, error, data, refetch } = useQuery(GET_ALL_REVIEWS);
-
+console.log(data)
   // Mutation for updating reviews
   const [updateReview] = useMutation(UPDATE_REVIEW_MUTATION);
 
@@ -66,11 +86,11 @@ const EmployeeLandingPage = () => {
   }
 
   const reviewsAsReviewer = data.getAllReviews.filter(
-    (review: any) => review.reviewer === user.username
+    (review: any) => review.reviewer.name === user.username
   );
 
   const reviewsAsReviewee = data.getAllReviews.filter(
-    (review: any) => review.reviewee === user.username
+    (review: any) => review.reviewee.name === user.username
   );
 
   const handleSaveChanges = async () => {
@@ -81,8 +101,8 @@ const EmployeeLandingPage = () => {
         variables: {
           id: selectedReview.id,
           updateReviewDto:{
-            reviewer: selectedReview.reviewer,
-            reviewee: selectedReview.reviewee,
+            reviewer: selectedReview.reviewer.id,
+            reviewee: selectedReview.reviewee.id,
             status:  editableFeedback !== "" ? 'COMPLETED': "PENDING", 
             feedback: editableFeedback, 
           }
@@ -115,7 +135,7 @@ const EmployeeLandingPage = () => {
                   }}
                 >
                   <p className="text-gray-700">
-                    <strong>Reviewee:</strong> {review.reviewee}
+                    <strong>Reviewee:</strong> {review.reviewee.name}
                   </p>
                   <p className="text-gray-700">
                     <strong>Status:</strong>{" "}
@@ -147,7 +167,7 @@ const EmployeeLandingPage = () => {
                   className="p-4 bg-gray-50 rounded-lg shadow-sm cursor-pointer hover:bg-gray-100 transition"
                 >
                   <p className="text-gray-700">
-                    <strong>Reviewer:</strong> {review.reviewer}
+                    <strong>Reviewer:</strong> {review.reviewer.name}
                   </p>
                   <p className="text-gray-700">
                     <strong>Status:</strong>{" "}
@@ -176,10 +196,10 @@ const EmployeeLandingPage = () => {
               Edit Review
             </h3>
             <p className="text-gray-700">
-              <strong>Reviewer:</strong> {selectedReview.reviewer}
+              <strong>Reviewer:</strong> {selectedReview.reviewer.name}
             </p>
             <p className="text-gray-700">
-              <strong>Reviewee:</strong> {selectedReview.reviewee}
+              <strong>Reviewee:</strong> {selectedReview.reviewee.name}
             </p>
             <p className="text-gray-700 mb-4">
               <strong>Status:</strong>{" "}
@@ -194,13 +214,13 @@ const EmployeeLandingPage = () => {
             <textarea
               className="w-full p-3 bg-white text-gray-700 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               value={editableFeedback ? editableFeedback : selectedReview.feedback}
-              readOnly={selectedReview.reviewee === user.username}
+              readOnly={selectedReview.reviewee.name === user.username}
 
               onChange={(e) => setEditableFeedback(e.target.value)}
             />
             <div className="flex justify-end space-x-4 mt-4">
             
-            {selectedReview.reviewer === user.username && selectedReview.reviewee !== user.username && (
+            {selectedReview.reviewer.name === user.username && selectedReview.reviewee.name !== user.username && (
                   <button
                     onClick={handleSaveChanges}
                     className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition"
@@ -215,9 +235,9 @@ const EmployeeLandingPage = () => {
                 Cancel
               </button>
             </div>
-            {selectedReview.reviewee === user.username ? null :  <button
+            {selectedReview.reviewee.name === user.username ? null :  <button
               onClick={() => setSelectedReview(null)}
-              disabled={selectedReview.reviewee === user.username}
+              disabled={selectedReview.reviewee.name === user.username}
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-2xl"
             >
               &times;

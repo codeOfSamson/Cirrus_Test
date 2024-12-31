@@ -15,7 +15,8 @@ export class ReviewsResolver {
 
   @Query(() => [Review])
   async getAllReviews(): Promise<Review[]> {
-    return this.reviewsService.findAll()
+    return await this.reviewsService.findAll()
+
   }
 
   @Query(() => Review)

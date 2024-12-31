@@ -33,7 +33,6 @@ const UPDATE_USER = gql`
       id
       name
       email
-      role
     }
   }
 `;
@@ -52,24 +51,24 @@ const UsersCRUD = () => {
   const [updateUser] = useMutation(UPDATE_USER);
   const [deleteUser] = useMutation(DELETE_USER);
 
-  const [form, setForm] = useState({ id: "", name: "", email: "", role: "" });
+  const [form, setForm] = useState({ id: "", name: "", email: "", role: "", password: "" });
   const [isEditModalOpen, setEditModalOpen] = useState(false);
 
   if (loading) return <p>Loading users...</p>;
   if (error) return <p>Error loading users: {error.message}</p>;
 
   const handleCreate = async () => {
-    const { name, email, role } = form;
-    await createUser({ variables: { createUserInput: { name, email, role } } });
+    const { name, email, role, password } = form;
+    await createUser({ variables: { createUserInput: { name, email, role, password } } });
     refetch();
-    setForm({ id: "", name: "", email: "", role: "" });
+    setForm({ id: "", name: "", email: "", role: "", password: "" });
   };
 
   const handleUpdate = async () => {
     const { id, name, email, role } = form;
     await updateUser({ variables: { id, updateUserInput: { name, email, role } } });
     refetch();
-    setForm({ id: "", name: "", email: "", role: "" });
+    setForm({ id: "", name: "", email: "", role: "", password: "" });
     setEditModalOpen(false);
   };
 
@@ -111,10 +110,18 @@ const UsersCRUD = () => {
             <option value="admin">Admin</option>
             <option value="employee">Employee</option>
           </select>
+
+          <input
+            className="w-full p-3 mb-4 bg-white  text-gray-700 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Password"
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+          />
           <button
             onClick={form.id ? handleUpdate : handleCreate}
             className="w-full bg-green-500 text-white py-3 rounded-md hover:bg-green-600 transition duration-200"
           >
+
             {form.id ? "Update User" : "Create User"}
           </button>
         </div>
@@ -183,7 +190,7 @@ const UsersCRUD = () => {
             <button
               onClick={() => {
                 setEditModalOpen(false);
-                setForm({ id: "", name: "", email: "", role: "" });
+                setForm({ id: "", name: "", email: "", role: "", password: "" });
               }}
               className="w-full mt-2 text-gray-500 hover:underline text-center"
             >
