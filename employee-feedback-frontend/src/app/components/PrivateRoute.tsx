@@ -10,6 +10,8 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   if (!user?.isLoggedIn) {
     notFound(); 
     return null; 
+  } else if ( user?.role === 'employee'){
+    return <>{`Sorry you do not have access to this page : '(`}</>
   }
 
   return <>{children}</>;
