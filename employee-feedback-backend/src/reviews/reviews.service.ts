@@ -16,11 +16,16 @@ export class ReviewsService {
   }
 
   async findAll(): Promise<Review[]> {
-    return this.reviewModel.find()
-    .populate('reviewer')
-    .populate('reviewee')
-    .exec();
+    const reviews = await this.reviewModel
+      .find()
+      .populate('reviewer')
+      .populate('reviewee')
+      .exec();
+  
+    // Filter out reviews with missing reviewer or reviewee
+    return reviews.filter((review) => review.reviewer && review.reviewee);
   }
+  
 
   async findOne(id: string): Promise<Review> {
     const review = await this.reviewModel.findById(id).exec();
@@ -33,7 +38,7 @@ export class ReviewsService {
   async update(id: string, updateReviewDto: UpdateReviewDto): Promise<Review> {
     const updatedReview = await this.reviewModel
       .findByIdAndUpdate(id, updateReviewDto, { new: true })
-      .populate('reviewer') // Populate reviewer field
+      .populate('reviewer') 
       .populate('reviewee')
       .exec();
 

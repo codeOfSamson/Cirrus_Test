@@ -124,6 +124,15 @@ const UsersCRUD = () => {
 
             {form.id ? "Update User" : "Create User"}
           </button>
+          <button
+              onClick={() => {
+                setEditModalOpen(false);
+                setForm({ id: "", name: "", email: "", role: "", password: "" });
+              }}
+              className="w-full mt-2 text-gray-500 hover:underline text-center"
+            >
+              Cancel
+            </button>
         </div>
 
         {/* Right Side: Users List */}
@@ -144,8 +153,9 @@ const UsersCRUD = () => {
                 <div>
                   <button
                     onClick={() => {
+                      console.log(user)
                       setForm(user);
-                      setEditModalOpen(true);
+                      //setEditModalOpen(true);
                     }}
                     className="text-blue-500 hover:underline mr-4"
                   >

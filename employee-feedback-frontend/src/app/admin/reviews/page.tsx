@@ -6,13 +6,31 @@ import Link from "next/link";
 
 // GraphQL Queries and Mutations
 const GET_REVIEWS = gql`
-  query GetAllReviews {
-    getAllReviews {
+ query {
+  getAllReviews {
+    id
+    reviewer {
       id
-      reviewer
-      reviewee
-      feedback
-      status
+      name
+      email
+    }
+    reviewee {
+      id
+      name
+      email
+    }
+    status
+    feedback
+    rating
+  }
+}
+`;
+
+const GET_EMPLOYEES = gql`
+  query {
+    getUsers {
+      id
+      name
     }
   }
 `;
@@ -21,8 +39,6 @@ const CREATE_REVIEW = gql`
   mutation CreateReview($createReviewDto: CreateReviewDto!) {
     createReview(createReviewDto: $createReviewDto) {
       id
-      reviewer
-      reviewee
       feedback
       status
     }
@@ -33,8 +49,16 @@ const UPDATE_REVIEW = gql`
   mutation UpdateReview($id: String!, $updateReviewDto: UpdateReviewDto!) {
     updateReview(id: $id, updateReviewDto: $updateReviewDto) {
       id
-      reviewer
-      reviewee
+      reviewer {
+        id
+        name
+        email
+      }
+      reviewee {
+        id
+        name
+        email
+      }
       feedback
       status
     }
@@ -49,10 +73,12 @@ const DELETE_REVIEW = gql`
 
 const ReviewsCRUD = () => {
   const { loading, error, data, refetch } = useQuery(GET_REVIEWS);
+  const { loading: employeesLoading, error: employeesError, data: employeesData } = useQuery(GET_EMPLOYEES);
   const [createReview] = useMutation(CREATE_REVIEW);
   const [updateReview] = useMutation(UPDATE_REVIEW);
   const [deleteReview] = useMutation(DELETE_REVIEW);
 
+  console.log(employeesData)
   const [form, setForm] = useState({
     id: "",
     reviewer: "",
@@ -63,24 +89,33 @@ const ReviewsCRUD = () => {
 
   const [isEditModalOpen, setEditModalOpen] = useState(false);
 
-  if (loading) return <p>Loading reviews...</p>;
-  if (error) return <p>Error loading reviews: {error.message}</p>;
+  if (loading || employeesLoading) return <p>Loading...</p>;
+  if (error || employeesError) return <p>Error: {error?.message || employeesError?.message}</p>;
 
   const handleCreate = async () => {
     const { reviewer, reviewee, feedback } = form;
+
+    if (!reviewer || !reviewee) {
+      alert("Please select both a reviewer and reviewee.");
+      return;
+    }
+
     await createReview({
-      variables: { createReviewDto: { reviewer, reviewee, feedback } },
+      variables: { createReviewDto: { reviewer, reviewee, feedback, status: "PENDING", rating : 0 } },
     });
+
     refetch();
     setForm({ id: "", reviewer: "", reviewee: "", feedback: "", status: "" });
   };
 
   const handleUpdate = async () => {
-    const { id, reviewer, reviewee, feedback,  } = form;
-    const status = feedback === "" ? "PENDING" : "COMPLETED"
+    const { id, feedback } = form;
+    const status = feedback === "" ? "PENDING" : "COMPLETED";
+
     await updateReview({
-      variables: { id, updateReviewDto: { reviewer, reviewee, feedback, status } },
+      variables: { id, updateReviewDto: { reviewer: form.reviewer, reviewee: form.reviewee, feedback, status } },
     });
+
     refetch();
     setForm({ id: "", reviewer: "", reviewee: "", feedback: "", status: "" });
     setEditModalOpen(false);
@@ -103,32 +138,46 @@ const ReviewsCRUD = () => {
           <h2 className="text-xl font-semibold mb-4 text-gray-700">
             {form.id ? "Edit Review" : "Create Review"}
           </h2>
-          <input
-            className="w-full p-3 mb-4 bg-white  text-gray-700 border rounded-md focus:ring-2 focus:ring-blue-500"
-            placeholder="Reviewer"
-            value={form.reviewer}
-            onChange={(e) => setForm({ ...form, reviewer: e.target.value })}
-          />
-          <input
-            className="w-full p-3 mb-4 bg-white  text-gray-700 border rounded-md focus:ring-2 focus:ring-blue-500"
-            placeholder="Reviewee"
-            value={form.reviewee}
-            onChange={(e) => setForm({ ...form, reviewee: e.target.value })}
-          />
+
+          <div className="mb-4">
+            <label className="block mb-2 text-gray-600">Reviewer</label>
+            <select
+              className="w-full p-3 bg-white text-gray-600 border rounded-md focus:ring-2 focus:ring-blue-500"
+              value={form.reviewer}
+              onChange={(e) => setForm({ ...form, reviewer: e.target.value })}
+            >
+              <option value="">Select Reviewer</option>
+              {employeesData?.getUsers?.map((user: { id: string; name: string }) => (
+                <option key={user.id} value={user.id}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-4">
+            <label className="block mb-2 text-gray-600">Reviewee</label>
+            <select
+              className="w-full p-3 text-gray-600 bg-white border rounded-md focus:ring-2 focus:ring-blue-500"
+              value={form.reviewee}
+              onChange={(e) => setForm({ ...form, reviewee: e.target.value })}
+            >
+              <option value="">Select Reviewee</option>
+              {employeesData?.getUsers?.map((user: { id: string; name: string }) => (
+                <option key={user.id} value={user.id}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <textarea
-            className="w-full p-3 mb-4 bg-white  text-gray-700 border rounded-md focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 mb-4 bg-white text-gray-700 border rounded-md focus:ring-2 focus:ring-blue-500"
             placeholder="Feedback"
             value={form.feedback}
             onChange={(e) => setForm({ ...form, feedback: e.target.value })}
           />
-          {/* {form.id && (
-            <input
-              className="w-full p-3 mb-4 border rounded-md focus:ring-2 focus:ring-blue-500"
-              placeholder="Status: PENDING or COMPLETED"
-              value={form.status}
-              onChange={(e) => setForm({ ...form, status: e.target.value })}
-            />
-          )} */}
+
           <button
             onClick={form.id ? handleUpdate : handleCreate}
             className="w-full bg-green-500 mb-2 text-white py-3 rounded-md hover:bg-green-600 transition duration-200"
@@ -136,23 +185,18 @@ const ReviewsCRUD = () => {
             {form.id ? "Update Review" : "Create Review"}
           </button>
           <button
-   onClick={() => setForm({
-    id: "",
-    reviewer: "",
-    reviewee: "",
-    feedback: "",
-    status: "",
-  })}
-
-            className="w-full bg-red-500 text-white py-3 rounded-md hover:bg-green-600 transition duration-200"
-            >
+            onClick={() =>
+              setForm({ id: "", reviewer: "", reviewee: "", feedback: "", status: "" })
+            }
+            className="w-full bg-red-500 text-white py-3 rounded-md hover:bg-red-700 transition duration-200"
+          >
             Cancel
           </button>
         </div>
 
         {/* Right Side: Reviews List */}
         <div className="bg-white p-6 shadow-lg rounded-lg max-h-[80vh] overflow-y-auto">
-          <h2 className="text-xl font-semibold mb-4 bg-white  text-gray-700">Reviews List</h2>
+          <h2 className="text-xl font-semibold mb-4 bg-white text-gray-700">Reviews List</h2>
           <div className="space-y-4">
             {data.getAllReviews.map((review: any) => (
               <div
@@ -161,13 +205,13 @@ const ReviewsCRUD = () => {
               >
                 <div>
                   <p className="font-semibold text-gray-800">
-                    Reviewer: {review.reviewer}
+                    Reviewer: {review?.reviewer.name}
                   </p>
                   <p className="text-gray-600 text-sm">
-                    Reviewee: {review.reviewee}
+                    Reviewee: {review?.reviewee.name}
                   </p>
                   <p className="text-sm">
-                    Status:{" "}
+                    Status: {" "}
                     <span
                       className={`font-semibold ${
                         review.status === "PENDING"
@@ -182,7 +226,13 @@ const ReviewsCRUD = () => {
                 <div>
                   <button
                     onClick={() => {
-                      setForm(review);
+                      setForm({
+                        id: review?.id,
+                        reviewer: review?.reviewer.id,
+                        reviewee: review?.reviewee.id,
+                        feedback: review?.feedback,
+                        status: review?.status,
+                      });
                       setEditModalOpen(true);
                     }}
                     className="text-blue-500 hover:underline mr-4"
@@ -203,11 +253,11 @@ const ReviewsCRUD = () => {
       </div>
 
       <button
-  onClick={() => window.history.back()}
-  className="block text-center mt-8 text-blue-500 hover:underline"
->
-  Go Back
-</button>
+        onClick={() => window.history.back()}
+        className="block text-center mt-8 text-blue-500 hover:underline"
+      >
+        Go Back
+      </button>
     </div>
   );
 };
