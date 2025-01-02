@@ -6,6 +6,7 @@ import { join } from 'path';
 import { UsersModule } from './users/users.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { AuthModule } from './auth/auth.module';
+import { AuditLogModule } from './audit/audit-log.module';
 
 
 @Module({
@@ -20,6 +21,7 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
     UsersModule,
     ReviewsModule,
+    AuditLogModule
   ],
 })
 export class AppModule {}
