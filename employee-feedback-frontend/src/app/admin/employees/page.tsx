@@ -51,7 +51,6 @@ const UsersCRUD = () => {
   const [createUser] = useMutation(CREATE_USER);
   const [updateUser] = useMutation(UPDATE_USER);
   const [deleteUser] = useMutation(DELETE_USER);
-
   const [form, setForm] = useState({ id: "", name: "", email: "", role: "", password: "" });
   const [isEditModalOpen, setEditModalOpen] = useState(false);
 

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import PrivateRoute from "@/app/components/PrivateRoute";
+import AwesomeStarsRating from 'react-awesome-stars-rating';
 
 // GraphQL Queries and Mutations
 const GET_REVIEWS = gql`
@@ -212,7 +213,7 @@ const ReviewsCRUD = () => {
                   <p className="text-gray-600 text-sm">
                     Reviewee: {review?.reviewee.name}
                   </p>
-                  <p className="text-sm">
+                  <p  className="text-gray-600 text-sm">
                     Status: {" "}
                     <span
                       className={`font-semibold ${
@@ -224,6 +225,15 @@ const ReviewsCRUD = () => {
                       {review.status}
                     </span>
                   </p>
+                </div>
+                <div className="md:rotate-90">
+                <AwesomeStarsRating 
+                value={review?.rating} 
+                size={10} 
+                isEdit={false} 
+                className="flex items-center space-x-1 text-yellow-400"
+                />
+
                 </div>
                 <div>
                   <button
