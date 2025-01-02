@@ -4,14 +4,33 @@ import { Model } from 'mongoose';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { Review, ReviewDocument } from './schemas/review.schema';
+import { AuditLogService } from '../audit/audit-log.service'
+
 
 @Injectable()
 export class ReviewsService {
-  constructor(@InjectModel(Review.name) private reviewModel: Model<ReviewDocument>) {}
+  constructor(
+    @InjectModel(Review.name) private reviewModel: Model<ReviewDocument>,
+    private readonly auditLogService: AuditLogService,
+  ) {}
 
   async create(createReviewDto: CreateReviewDto): Promise<Review> {
     const newReview = new this.reviewModel(createReviewDto);
+    { }
+    console.log('dto', createReviewDto)
     console.log('nr', newReview)
+
+       // Log the action
+       //add in userId later
+         // 'CREATE_REVIEW',
+          // userId,
+         
+        await this.auditLogService.logAction(
+          'Review',
+          newReview._id.toString(),
+          `Created review for ${createReviewDto.reviewee}`,
+        );
+
     return newReview.save();
   }
 
