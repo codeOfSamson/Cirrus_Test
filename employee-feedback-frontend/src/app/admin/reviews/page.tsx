@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
+import PrivateRoute from "@/app/components/PrivateRoute";
 
 // GraphQL Queries and Mutations
 const GET_REVIEWS = gql`
@@ -127,7 +128,8 @@ const ReviewsCRUD = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
+    <PrivateRoute>
+       <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
       <h1 className="text-3xl font-bold text-gray-700 text-center mb-8">
         Review Management
       </h1>
@@ -259,6 +261,8 @@ const ReviewsCRUD = () => {
         Go Back
       </button>
     </div>
+    </PrivateRoute>
+   
   );
 };
 

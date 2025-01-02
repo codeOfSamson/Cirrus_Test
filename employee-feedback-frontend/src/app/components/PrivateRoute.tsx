@@ -1,5 +1,5 @@
 'use client';
-
+import { redirect } from 'next/navigation';
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
@@ -11,7 +11,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
     notFound(); 
     return null; 
   } else if ( user?.role === 'employee'){
-    return <>{`Sorry you do not have access to this page : '(`}</>
+    redirect('/unauthorized'); 
   }
 
   return <>{children}</>;

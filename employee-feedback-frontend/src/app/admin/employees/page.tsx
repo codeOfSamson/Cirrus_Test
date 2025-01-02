@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
+import PrivateRoute from "@/app/components/PrivateRoute";
 
 // GraphQL Queries and Mutations
 const GET_USERS = gql`
@@ -78,7 +79,8 @@ const UsersCRUD = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
+    <PrivateRoute>
+  <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
       <h1 className="text-3xl font-bold text-gray-700 text-center mb-8">
         User Management
       </h1>
@@ -155,7 +157,7 @@ const UsersCRUD = () => {
                     onClick={() => {
                       console.log(user)
                       setForm(user);
-                      //setEditModalOpen(true);
+                      setEditModalOpen(true);
                     }}
                     className="text-blue-500 hover:underline mr-4"
                   >
@@ -214,6 +216,8 @@ const UsersCRUD = () => {
         Go Back
       </Link>
     </div>
+    </PrivateRoute>
+  
   );
 };
 

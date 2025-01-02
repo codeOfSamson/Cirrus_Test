@@ -3,7 +3,7 @@
 import React, { useState , Context} from "react";
 import Link from "next/link";
 //import { useSearchParams } from 'next/navigation'; // For Next.js 13
-
+import PrivateRoute from "../components/PrivateRoute";
 
 const AdminLandingPage = () => {
 
@@ -13,7 +13,8 @@ const AdminLandingPage = () => {
 
   // Admin Dashboard
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <PrivateRoute>
+  <div className="min-h-screen bg-gray-50 p-8">
       <h1 className="text-4xl font-bold text-center text-gray-800 mb-10">
         Welcome to the Admin Panel
       </h1>
@@ -47,11 +48,13 @@ const AdminLandingPage = () => {
       </div>
 
       <div className="text-center mt-10">
-        <Link href="/" className="text-blue-600 hover:underline">
+        {/* <Link href="/" className="text-blue-600 hover:underline">
           Go to Home Page
-        </Link>
+        </Link> */}
       </div>
     </div>
+    </PrivateRoute>
+  
   );
 };
 
