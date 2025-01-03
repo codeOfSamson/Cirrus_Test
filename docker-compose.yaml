@@ -1,4 +1,6 @@
+version: '3.8'
 
+services:
   backend:
     build:
       context: ./employee-feedback-backend
@@ -6,10 +8,9 @@
     ports:
       - "4000:4000"
     environment:
-      - MONGO_URI=mongodb://host.docker.internal:27017/employee-review-system
+      - MONGO_URI=mongodb://mongo:27017/employee-review-system # Use the container name "mongo"
       - NODE_ENV=production
       - JWT_SECRET=04f03127694304565195b006b4597e45ea20ab9dc3f93b05b60d1cb5b70cb35a
-
     depends_on:
       - mongo
 
@@ -20,7 +21,7 @@
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_GRAPHQL_ENDPOINT=http://backend:4000/graphql
+      - NEXT_PUBLIC_GRAPHQL_ENDPOINT=http://backend:4000/graphql # Use the container name "backend"
     depends_on:
       - backend
 
