@@ -3,5 +3,5 @@ services:
     name: employee-review-backend
     env: docker
     plan: free
-    dockerComposePath: docker-compose.yaml
+    dockerComposePath: docker-compose.yml
 
