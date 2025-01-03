@@ -1,7 +1,7 @@
 services:
   - type: web
-    name: employee-review-app
+    name: employee-review-backend
     env: docker
     plan: free
-    dockerfilePath: ./docker-compose.yaml
-    healthCheckPath: /
+    dockerComposePath: docker-compose.yml
+
