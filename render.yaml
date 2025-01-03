@@ -1,7 +1,11 @@
 services:
   - type: web
-    name: employee-review-backend
+    name: employee-review
     env: docker
     plan: free
-    dockerComposePath: docker-compose.yaml
-
+    dockerfilePath: Dockerfile
+    envVars:
+      - key: MONGO_URI
+        value: mongodb://mongo:27017/employee-review-system
+      - key: NEXT_PUBLIC_GRAPHQL_ENDPOINT
+        value: http://backend:4000/graphql
