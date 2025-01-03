@@ -1,10 +1,7 @@
 services:
   - type: web
-    name: Employee Feedback Backend
-    env: node
-    rootDir: ./cirrus_test/employee-feedback-backend
-    buildCommand: npm install && npm run build
-    startCommand: npm start
-    envVars:
-      - key: MONGODB_URI
-        value: mongodb+srv://cirrusDev:DxMQeRjVTx3jL5DT@cluster62585.a5gcu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster62585
+    name: employee-review-app
+    env: docker
+    plan: free
+    dockerfilePath: ./docker-compose.yaml
+    healthCheckPath: /
