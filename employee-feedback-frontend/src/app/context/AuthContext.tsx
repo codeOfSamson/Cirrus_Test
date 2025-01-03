@@ -53,9 +53,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     localStorage.removeItem("role");
-
-    setUser({ username: "", isLoggedIn: false, role:''});
     router.push("/"); 
+    setUser({ username: "", isLoggedIn: false, role:''});
+   
+
   };
 
   return (
