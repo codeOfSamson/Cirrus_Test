@@ -3,7 +3,7 @@ services:
     name: employee-review
     env: docker
     plan: free
-    dockerfilePath: Dockerfile
+    dockerComposePath: ./docker-compose.yaml
     envVars:
       - key: MONGO_URI
         value: mongodb://mongo:27017/employee-review-system
