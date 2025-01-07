@@ -1,41 +1,101 @@
-Hello, and welcome to employee review app!
+Employee Review System
 
-How to use:
-Admins: Nav to admin page to perfom crud operations on Employees and Reviews.  Here they can assign reviews to certain employees.
-Employees: Nav to employee page. Select an employee (self) to see and edit any reviews that pertain to that employee.
+A comprehensive Employee Review System designed for managing employees, performance reviews, and audit logs efficiently.  Built with modern web technologies, this application provides role-based access and a user-friendly interface for administrators and employees.
 
-Before cloning the repo, ensure the following tools are installed on your local machine:
+Features:
 
--Node.js (version 18.x or higher)
--npm or yarn
--Git
--MongoDB (Ensure MongoDB is running locally or use a cloud-hosted MongoDB URI)
+User Management
 
-For the Backend:
------------------
-1. Open a terminal and Navigate to the backend directory:
-Install dependencies:
+Create, update, delete, and view employee records.
+
+Secure authentication and authorization.
+
+Review Management
+
+Create, update, and delete performance reviews.
+
+Assign reviews to specific employees.
+
+Audit Logs
+
+Track changes and operations within the system.
+
+Display audit logs in a sortable and filterable table.
+
+Technologies Used
+
+Frontend: Next.js, React, TypeScript, Tailwind CSS
+
+Backend: Node.js, GraphQL, Apollo Server, MongoDB
+
+Containerization: Docker, Docker Compose
+
+Deployment: Railway, Fly.io (optional)
+
+Getting Started
+
+Follow these steps to run the project locally or with Docker.
+
+Prerequisites
+
+Node.js: Version 16+
+
+MongoDB: Locally installed or cloud-hosted MongoDB instance
+
+Docker: Installed and running
+
+Running Locally
+
+1. Clone the Repository
+
+git clone https://github.com/codeOfSamson/employee-review-system.git
+cd employee-review-system
+
+2. Set Up the Backend
+
+cd employee-feedback-backend
 npm install
 
-2.Go to app module and find:
+Create a .env file in the employee-feedback-backend directory:
 
-MongooseModule.forRoot(process.env.MONGO_URI),
+MONGODB_URI=mongodb://localhost:27017/employee-review-system
+NODE_ENV=development
+JWT_SECRET=your_jwt_secret
 
-replace "process.env.MONGO_URI" with uri pointing to your local mongodb.
+Run the backend:
 
+npm start
 
-3.Start the backend server:
-npm run start:dev
+3. Set Up the Frontend
 
-For The FrontEnd:
-------------------
-1. Open another terminal and Navigate to the frontend directory:
-Install dependencies:
+cd ../employee-feedback-frontend
 npm install
-2. Startup Frontend
+
+Create a .env.local file in the employee-feedback-frontend directory:
+
+NEXT_PUBLIC_GRAPHQL_ENDPOINT=http://localhost:4000/graphql
+
+Run the frontend:
+
 npm run dev
 
--------------------
-Notes:
-Make sure MongoDB is running when starting the backend.
-If you are using a cloud-hosted MongoDB (e.g., MongoDB Atlas), ensure the IP whitelist allows connections from your local machine.
+Access the application at http://localhost:3000.
+
+Running with Docker instead?
+In parent directory that contains docker-compose.yaml, run the following command: 
+
+docker-compose up --build
+
+This command will:
+
+Start the backend service on port 4000
+
+Start the frontend service on port 3000
+
+Start a MongoDB service on port 27017
+
+3. Access the Application
+
+Frontend: http://localhost:3000
+
+GraphQL Playground (Backend): http://localhost:4000/graphql
