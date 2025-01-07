@@ -52,7 +52,7 @@ type Mutation {
   login(email: String!, password: String!): AuthPayload!
   updateUser(id: String!, updateUserInput: UpdateUserInput!): User!
   deleteUser(id: String!): User!
-  createReview(createReviewDto: CreateReviewDto!): Review!
+  createReview(createReviewDto: CreateReviewDto!, userId: String!): Review!
   updateReview(id: String!, updateReviewDto: UpdateReviewDto!): Review!
   deleteReview(id: String!): Boolean!
 }

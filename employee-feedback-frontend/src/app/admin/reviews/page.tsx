@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
+import { useAuth } from "../../context/AuthContext"
+
 import PrivateRoute from "@/app/components/PrivateRoute";
 //import AwesomeStarsRating from 'react-awesome-stars-rating';
 
@@ -38,8 +40,8 @@ const GET_EMPLOYEES = gql`
 `;
 
 const CREATE_REVIEW = gql`
-  mutation CreateReview($createReviewDto: CreateReviewDto!) {
-    createReview(createReviewDto: $createReviewDto) {
+  mutation CreateReview($createReviewDto: CreateReviewDto!, $userId: String!) {
+    createReview(createReviewDto: $createReviewDto, userId: $userId) {
       id
       feedback
       status
@@ -79,6 +81,9 @@ const ReviewsCRUD = () => {
   const [createReview] = useMutation(CREATE_REVIEW);
   const [updateReview] = useMutation(UPDATE_REVIEW);
   const [deleteReview] = useMutation(DELETE_REVIEW);
+  const { user } = useAuth(); 
+  console.log('user', user)
+
 
   console.log(employeesData)
   const [form, setForm] = useState({
@@ -96,15 +101,18 @@ const ReviewsCRUD = () => {
 
   const handleCreate = async () => {
     const { reviewer, reviewee, feedback } = form;
-
+    const { id: userId } = user
     if (!reviewer || !reviewee) {
       alert("Please select both a reviewer and reviewee.");
       return;
     }
 
     await createReview({
-      variables: { createReviewDto: { reviewer, reviewee, feedback, status: "PENDING", rating : 0 } },
-    });
+      variables: { 
+        createReviewDto: { reviewer, reviewee, feedback, status: "PENDING", rating : 0 },
+        userId
+      }, 
+    }, );
 
     refetch();
     setForm({ id: "", reviewer: "", reviewee: "", feedback: "", status: "" });

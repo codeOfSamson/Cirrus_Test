@@ -64,7 +64,7 @@ JWT_SECRET=your_jwt_secret
 
 Run the backend:
 
-npm start
+npm run start
 
 3. Set Up the Frontend
 

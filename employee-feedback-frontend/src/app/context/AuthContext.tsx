@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, ReactNode, useEffect } from
 import { useRouter } from "next/navigation";
 
 interface User {
+  id: string,
   username: string;
   isLoggedIn: boolean;
   role: string;
@@ -24,15 +25,16 @@ interface AuthProviderProps {
 // Create a provider to manage auth state
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const router =useRouter()
-  const [user, setUser] = useState<User>({ username: '', isLoggedIn: false, role: ''});
+  const [user, setUser] = useState<User>({ id: '', username: '', isLoggedIn: false, role: ''});
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
     const role = localStorage.getItem("role");
+    const id = localStorage.getItem("id");
 
-    if (token && username && role) {
-      setUser({ username, isLoggedIn: true , role: role});
+    if (token && username && role && id) {
+      setUser({id, username, isLoggedIn: true , role: role});
     }
   }, []);
 
@@ -40,8 +42,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.setItem("token", userData.token);
     localStorage.setItem("username", userData.user.name);
     localStorage.setItem("role", userData.user.role);
+    localStorage.setItem("id", userData.user.id);
 
-    setUser({ username: userData.user.name, isLoggedIn: true, role: userData.user.role});
+    setUser({ id: userData.user.id, username: userData.user.name, isLoggedIn: true, role: userData.user.role});
     if(userData.user.role === 'admin'){
       router.push("/"); 
     } else if (userData.user.role === 'employee'){
@@ -53,8 +56,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     localStorage.removeItem("role");
+    localStorage.removeItem("id");
     router.push("/"); 
-    setUser({ username: "", isLoggedIn: false, role:''});
+    setUser({ id:'', username: '', isLoggedIn: false, role:''});
    
 
   };

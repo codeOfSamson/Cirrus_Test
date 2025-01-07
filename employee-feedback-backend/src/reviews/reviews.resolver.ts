@@ -9,8 +9,11 @@ export class ReviewsResolver {
   constructor(private readonly reviewsService: ReviewsService) {}
 
   @Mutation(() => Review)
-  async createReview(@Args('createReviewDto') createReviewDto: CreateReviewDto): Promise<Review> {
-    return this.reviewsService.create(createReviewDto);
+  async createReview(
+    @Args('createReviewDto') createReviewDto: CreateReviewDto,
+    @Args('userId') userId: string,
+): Promise<Review> {
+    return this.reviewsService.create(createReviewDto, userId);
   }
 
   @Query(() => [Review])

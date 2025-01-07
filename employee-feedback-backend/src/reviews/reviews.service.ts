@@ -14,18 +14,16 @@ export class ReviewsService {
     private readonly auditLogService: AuditLogService,
   ) {}
 
-  async create(createReviewDto: CreateReviewDto): Promise<Review> {
+  async create(createReviewDto: CreateReviewDto, userId: string): Promise<Review> {
     const newReview = new this.reviewModel(createReviewDto);
     { }
     console.log('dto', createReviewDto)
     console.log('nr', newReview)
-
-       // Log the action
-       //add in userId later
-         // 'CREATE_REVIEW',
-          // userId,
-         
+    console.log('userId', userId)
+           
         await this.auditLogService.logAction(
+          'CREATE_REVIEW',
+          userId,
           'Review',
           newReview._id.toString(),
           `Created review for ${createReviewDto.reviewee}`,
