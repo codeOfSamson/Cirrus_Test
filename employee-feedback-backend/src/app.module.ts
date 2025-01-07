@@ -11,7 +11,7 @@ import { AuditLogModule } from './audit/audit-log.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.MONGODB_URI),
+    MongooseModule.forRoot(process.env.MONGO_URI ||'mongodb://localhost:27017/employee-review-system'),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
