@@ -14,19 +14,39 @@ export class AuditLog {
 
   @Field({ nullable: true })
   @Prop({ required: false })
-  userId: string;
+  userId?: string;
 
   @Field({ nullable: true })
   @Prop({ required: false })
-  resource: string;
+  resource?: string;
 
   @Field({ nullable: true })
   @Prop({ required: false })
-  resourceId: string;
+  resourceId?: string;
 
   @Field({ nullable: true })
   @Prop({ required: false })
-  details: string;
+  details?: string;
+
+  @Field({ nullable: true })
+  @Prop({ required: false })
+  ipAddress?: string;
+
+  @Field({ nullable: true })
+  @Prop({ required: false })
+  userAgent?: string; 
+
+  @Field({ nullable: true })
+  @Prop({ required: false })
+  location?: string;
+
+  @Field({ nullable: true })
+  @Prop({ required: false })
+  timestamp?: string;
+
+  @Field({ nullable: true })
+  @Prop({ required: false, enum: ['Pending', 'Success', 'Failed'] })
+  outcome?: string;
 
   @Field({ nullable: true }) // Timestamp from Mongoose
   createdAt?: Date;

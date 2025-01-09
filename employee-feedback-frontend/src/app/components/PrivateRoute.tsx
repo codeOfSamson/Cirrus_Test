@@ -9,11 +9,9 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
   const router = useRouter()
   if (!user?.isLoggedIn) {
-    router.push("/")
-    return null; 
+    router.push("/unauthorized");     return null; 
   } else if ( user?.role === 'employee'){
-    redirect('/unauthorized'); 
-  }
+    router.push("/unauthorized");     }
 
   return <>{children}</>;
 };

@@ -3,17 +3,29 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service'; 
 import { User } from '../users/schema/user.schema';
+import { AuditLogService } from '../audit/audit-log.service'
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly auditLogService: AuditLogService,
+
   ) {}
 
   // Login Method
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.usersService.findByEmail(email);
+
+    // await this.auditLogService.logAction(
+    //   'VALIDATE_USER',
+    //   email,
+    //   'password',
+    //    password,
+    //   `${createReviewDto.reviewee}`,
+    // );
+
+  const user = await this.usersService.findByEmail(email);
     if (user && (await bcrypt.compare(password, user.password))) {
       return user;
     }

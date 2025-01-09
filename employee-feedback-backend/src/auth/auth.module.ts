@@ -5,9 +5,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { UsersModule } from '../users/users.module';
+import { AuditLogModule } from 'src/audit/audit-log.module';
+
 
 @Module({
   imports: [
+    AuditLogModule,
     ConfigModule.forRoot(), // Load .env file
     forwardRef(() => UsersModule),  // Use forwardRef() to avoid circular dependency
 

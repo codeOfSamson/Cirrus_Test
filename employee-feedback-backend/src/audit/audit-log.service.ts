@@ -10,13 +10,21 @@ export class AuditLogService {
     @InjectModel(AuditLog.name) private auditLogModel: Model<AuditLog>) {}
 
   async logAction(
-     action: string,
-     userId: string,
-    resource: string,
-    resourceId: string,
-    details?: string,
+    logDetails: {
+      action: string;
+      userId?: string;
+      resource?: string;
+      resourceId?: string;
+      ipAddress?: string;
+      userAgent?: any;
+      location?: string;
+      timestamp?: string;
+      outcome?: 'Pending' | 'Success' | 'Failed';
+      details?: string;
+    }
+
   ): Promise<AuditLog> {
-    return this.auditLogModel.create({ action, userId, resource, resourceId, details });
+    return this.auditLogModel.create(logDetails);
   }
  
 

@@ -31,7 +31,12 @@ export class UsersResolver {
   }
 
   @Mutation(() => AuthPayload)
-  async login(@Args('email') email: string, @Args('password') password: string) {
+  async login(
+    @Args('email') email: string, 
+    @Args('password') password: string,
+   // @Args('userId') userId: string
+  ) {
+   // console.log('made It: userId', userId, '!')
     const user = await this.authService.validateUser(email, password);
     const { access_token } = await this.authService.login(user); // Generate the JWT after validation    
     return {access_token, user}; // Return the JWT as a string

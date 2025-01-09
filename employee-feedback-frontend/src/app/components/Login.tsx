@@ -19,13 +19,14 @@ const LOGIN_MUTATION = gql`
 `;
 
 const Login = () => {
-  const { login } = useAuth(); //Auth Login
+  const { login, user} = useAuth(); //Auth Login
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [loginMutation, { loading, error }] = useMutation(LOGIN_MUTATION);
 
   const handleLogin = async (e: React.FormEvent) => {
+
     e.preventDefault();
     try {
       const { data } = await loginMutation({ variables: { email, password } });       

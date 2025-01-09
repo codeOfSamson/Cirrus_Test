@@ -14,15 +14,6 @@ type AuthPayload {
   user: User!
 }
 
-type Review {
-  id: ID!
-  reviewer: User!
-  reviewee: User!
-  status: String!
-  feedback: String
-  rating: Float
-}
-
 type AuditLog {
   id: ID!
   action: String
@@ -30,6 +21,11 @@ type AuditLog {
   resource: String
   resourceId: String
   details: String
+  ipAddress: String
+  userAgent: String
+  location: String
+  timestamp: String
+  outcome: String
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -39,12 +35,21 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Review {
+  id: ID!
+  reviewer: User!
+  reviewee: User!
+  status: String!
+  feedback: String
+  rating: Float
+}
+
 type Query {
+  getAuditLogs: [AuditLog!]!
   getUsers: [User!]!
   me: User
   getAllReviews: [Review!]!
   getReview(id: String!): Review!
-  getAuditLogs: [AuditLog!]!
 }
 
 type Mutation {

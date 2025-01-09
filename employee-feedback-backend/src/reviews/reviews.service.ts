@@ -17,16 +17,15 @@ export class ReviewsService {
   async create(createReviewDto: CreateReviewDto, userId: string): Promise<Review> {
     const newReview = new this.reviewModel(createReviewDto);
     { }
-    console.log('dto', createReviewDto)
-    console.log('nr', newReview)
-    console.log('userId', userId)
-           
-        await this.auditLogService.logAction(
-          'CREATE_REVIEW',
-          userId,
-          'Review',
-          newReview._id.toString(),
-          `Created review for ${createReviewDto.reviewee}`,
+   
+        await this.auditLogService.logAction( {
+         'action': 'CREATE_REVIEW',
+         'userId': userId,
+          'resource': 'Review',
+         'resourceId': newReview._id.toString(),
+          'details':`${createReviewDto.reviewee}`,
+        }
+        
         );
 
     return newReview.save();

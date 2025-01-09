@@ -53,11 +53,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const logout = () => {
+    router.push("/"); 
+
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     localStorage.removeItem("role");
     localStorage.removeItem("id");
-    router.push("/"); 
     setUser({ id:'', username: '', isLoggedIn: false, role:''});
    
 
