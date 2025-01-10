@@ -6,10 +6,11 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { UsersModule } from '../users/users.module';
 import { AuditLogModule } from 'src/audit/audit-log.module';
-
+import { GeoLocationModule } from 'src/geo-location/geo-location.module';
 
 @Module({
   imports: [
+    GeoLocationModule,
     AuditLogModule,
     ConfigModule.forRoot(), // Load .env file
     forwardRef(() => UsersModule),  // Use forwardRef() to avoid circular dependency
