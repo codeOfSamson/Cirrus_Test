@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { gql, useQuery } from "@apollo/client";
 import PrivateRoute from "../components/PrivateRoute";
+import { useAuth } from "../context/AuthContext";
 
 interface AuditLog {
   id: string;
@@ -47,7 +48,7 @@ const AdminLandingPage = () => {
   const [showTable, setShowTable] = useState(false);
   const [sortKey, setSortKey] = useState<string>("createdAt");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-
+  const {user} = useAuth()
   const toggleTable = () => setShowTable((prev) => !prev);
 
   const sortedLogs = data?.getAuditLogs.slice().sort((a, b) => {
@@ -55,6 +56,7 @@ const AdminLandingPage = () => {
     if (a[sortKey as keyof AuditLog] > b[sortKey as keyof AuditLog]) return sortOrder === "asc" ? 1 : -1;
     return 0;
   });
+  console.log(user)
 
   const handleSort = (key: string) => {
     setSortKey(key);
@@ -72,7 +74,7 @@ const AdminLandingPage = () => {
   if (error) return <p>Error fetching audit logs</p>;
   const headers = data?.getAuditLogs.length ? Object.keys(data.getAuditLogs[0]) : [];
   return (
-    <PrivateRoute>
+    <PrivateRoute user={user}>
       <div className="min-h-screen bg-gray-50 p-8">
         <h1 className="text-4xl font-bold text-center text-gray-800 mb-10">
           Welcome to the Admin Panel

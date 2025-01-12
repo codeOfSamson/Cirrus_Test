@@ -37,7 +37,6 @@ export class NLPService {
 
     // Key themes extraction
     const doc = nlp(feedback); 
-    console.log('doc', doc)
     // Process text with compromise
     const themes = doc.nouns().out('array'); // Extract nouns as themes
     console.log('themes', themes)
