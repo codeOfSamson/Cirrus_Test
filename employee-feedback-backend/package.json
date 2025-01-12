@@ -34,6 +34,7 @@
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "class-validator": "^0.14.1",
+    "compromise": "^14.14.3",
     "graphql": "^16.9.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.3",
@@ -41,6 +42,7 @@
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "sentiment": "^5.0.2",
     "ua-parser-js": "^2.0.0"
   },
   "devDependencies": {
@@ -52,6 +54,7 @@
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.1",
     "@types/passport-jwt": "^4.0.1",
+    "@types/sentiment": "^5.0.4",
     "@types/supertest": "^6.0.0",
     "@types/ua-parser-js": "^0.7.39",
     "@typescript-eslint/eslint-plugin": "^8.0.0",

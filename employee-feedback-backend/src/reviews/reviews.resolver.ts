@@ -3,10 +3,14 @@ import { ReviewsService } from './reviews.service'
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { Review } from './schemas/review.schema';
+import { NLPService } from 'src/nlp/nlp.service';
 
 @Resolver(() => Review)
 export class ReviewsResolver {
-  constructor(private readonly reviewsService: ReviewsService) {}
+  constructor(
+    private readonly reviewsService: ReviewsService,
+    private readonly nlpService : NLPService
+  ) {}
 
   @Mutation(() => Review)
   async createReview(
@@ -32,6 +36,15 @@ export class ReviewsResolver {
     @Args('id') id: string,
     @Args('updateReviewDto') updateReviewDto: UpdateReviewDto,
   ): Promise<Review> {
+
+    console.log(updateReviewDto)
+    let analysis : any
+    if(updateReviewDto?.feedback !== ''){
+      analysis = this.nlpService.analyzeFeedback(updateReviewDto.feedback);
+
+    }
+    console.log(9, analysis)
+
     return this.reviewsService.update(id, updateReviewDto);
   }
 
