@@ -7,13 +7,18 @@ import { AuthPayload } from './dto/auth-payload.dto';
 import { GqlAuthGuard } from 'src/auth/guards/GqlAuthGaurd';
 import { UseGuards } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Injectable, forwardRef, Inject } from '@nestjs/common';
 
+// import { RolesGuard } from '../auth/roles.guard'; // Optional: Role-based Guard
+// import { Roles } from '../auth/roles.decorator'; // 
+//Maybe add later roles guard
 
 @Resolver(() => User)
 export class UsersResolver {
   constructor(
     private readonly usersService: UsersService,
-  private readonly authService: AuthService
+    @Inject(forwardRef(() => AuthService)) private authService: AuthService,
   ) {}
 
 
@@ -23,6 +28,7 @@ export class UsersResolver {
   }
 
   @Mutation(() => User)
+  @UseGuards(JwtAuthGuard)
   async createUser(
     @Args('createUserInput') createUserInput: CreateUserInput,
   ): Promise<User> {
@@ -48,6 +54,7 @@ export class UsersResolver {
   @Query(() => User, { nullable: true })
   @UseGuards(GqlAuthGuard) // Using custom guard
   async me(@Context('req') req): Promise<User> {
+
     return req.user; 
   }
 
@@ -60,6 +67,7 @@ export class UsersResolver {
   }
 
   @Mutation(() => User)
+  @UseGuards(GqlAuthGuard) // Using custom guard
   async deleteUser(@Args('id') id: string): Promise<User> {
     return this.usersService.deleteUser(id);
   }

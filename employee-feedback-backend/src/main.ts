@@ -2,6 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { Reflector } from '@nestjs/core';
+import { config as dotenvConfig } from 'dotenv'; // Import dotenv
+
+dotenvConfig();
 
 
 async function bootstrap() {
@@ -16,7 +19,7 @@ async function bootstrap() {
       });
     
   // Apply the global JWT guard
-  const reflector = app.get(Reflector);
+ // const reflector = app.get(Reflector);
   //app.useGlobalGuards(new JwtAuthGuard(reflector));
 
     await app.listen(PORT);

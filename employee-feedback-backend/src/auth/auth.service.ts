@@ -1,4 +1,5 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
+import { Injectable, forwardRef, Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Request } from 'express';
@@ -11,7 +12,7 @@ import { GeoLocationService } from 'src/geo-location/geo-location.service';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UsersService,
+    @Inject(forwardRef(() => UsersService)) private usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly auditLogService: AuditLogService,
     private readonly geoLocationService: GeoLocationService, 

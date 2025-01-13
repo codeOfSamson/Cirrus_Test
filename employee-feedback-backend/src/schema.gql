@@ -45,9 +45,9 @@ type Review {
 }
 
 type Query {
-  getAuditLogs: [AuditLog!]!
   getUsers: [User!]!
   me: User
+  getAuditLogs: [AuditLog!]!
   getAllReviews: [Review!]!
   getReview(id: String!): Review!
 }
