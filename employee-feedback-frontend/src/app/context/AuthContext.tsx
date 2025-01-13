@@ -12,7 +12,7 @@ interface User {
 
 interface AuthContextType {
   user: User;
-  login: (userData: {  token: string, user: {email: string, id: string, name: string, role: string }}) => void;
+  login: (userData: {  access_token: string, user: {email: string, id: string, name: string, role: string }}) => void;
   logout: () => void;
 }
 
@@ -37,12 +37,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setUser({id, username, isLoggedIn: true , role: role});
     }
   }, []);
-
-   const login = ( userData: {  token: string, user: {email: string, id: string, name: string, role: string }}) => {
-    localStorage.setItem("token", userData.token);
+  console.log(1,user)
+   const login = ( userData: {  access_token: string, user: {email: string, id: string, name: string, role: string }}) => {
+    console.log('123',userData)
+    localStorage.setItem("authToken", userData.access_token);
     localStorage.setItem("username", userData.user.name);
     localStorage.setItem("role", userData.user.role);
     localStorage.setItem("id", userData.user.id);
+    console.log(2,userData)
 
     setUser({ id: userData.user.id, username: userData.user.name, isLoggedIn: true, role: userData.user.role});
     if(userData.user.role === 'admin'){
@@ -55,7 +57,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = () => {
     router.push("/"); 
 
-    localStorage.removeItem("token");
+    localStorage.removeItem("authToken");
     localStorage.removeItem("username");
     localStorage.removeItem("role");
     localStorage.removeItem("id");

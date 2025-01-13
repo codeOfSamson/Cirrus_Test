@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import PrivateRoute from "@/app/components/PrivateRoute";
+import { useAuth } from "@/app/context/AuthContext";
 
 // GraphQL Queries and Mutations
 const GET_USERS = gql`
@@ -53,7 +54,8 @@ const UsersCRUD = () => {
   const [deleteUser] = useMutation(DELETE_USER);
   const [form, setForm] = useState({ id: "", name: "", email: "", role: "", password: "" });
   const [isEditModalOpen, setEditModalOpen] = useState(false);
-
+  const {user } = useAuth()
+  console.log(user)
   if (loading) return <p>Loading users...</p>;
   if (error) return <p>Error loading users: {error.message}</p>;
 
@@ -78,7 +80,7 @@ const UsersCRUD = () => {
   };
 
   return (
-    <PrivateRoute>
+    <PrivateRoute user={user}>
   <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
       <h1 className="text-3xl font-bold text-gray-700 text-center mb-8">
         User Management

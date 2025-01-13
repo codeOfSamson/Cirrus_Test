@@ -56,7 +56,7 @@ const AdminLandingPage = () => {
     if (a[sortKey as keyof AuditLog] > b[sortKey as keyof AuditLog]) return sortOrder === "asc" ? 1 : -1;
     return 0;
   });
-  console.log(user)
+
 
   const handleSort = (key: string) => {
     setSortKey(key);

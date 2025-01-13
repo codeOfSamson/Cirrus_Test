@@ -28,7 +28,6 @@ export class UsersResolver {
   }
 
   @Mutation(() => User)
-  @UseGuards(JwtAuthGuard)
   async createUser(
     @Args('createUserInput') createUserInput: CreateUserInput,
   ): Promise<User> {
