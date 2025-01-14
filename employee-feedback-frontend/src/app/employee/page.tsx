@@ -4,6 +4,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
+import ReviewCard from "../components/ReviewCard";
 
 // GraphQL Queries
 const GET_ALL_REVIEWS = gql`
@@ -126,28 +127,17 @@ console.log(data)
           {reviewsAsReviewer.length > 0 ? (
             <ul className="space-y-4 max-h-[70vh] overflow-y-auto">
               {reviewsAsReviewer.map((review: any) => (
-                <li
+                  <ReviewCard
                   key={review.id}
-                  className="p-4 bg-gray-50 rounded-lg shadow-sm cursor-pointer hover:bg-gray-100 transition"
+                  reviewerName={review?.reviewer?.name}
+                  revieweeName={review?.reviewee?.name}
+                  status={review.status}
+                  rating={review?.rating}
                   onClick={() => {
                     setSelectedReview(review);
                     setEditableFeedback(review.feedback); // Load existing feedback into state
                   }}
-                >
-                  <p className="text-gray-700">
-                    <strong>Reviewee:</strong> {review.reviewee.name}
-                  </p>
-                  <p className="text-gray-700">
-                    <strong>Status:</strong>{" "}
-                    <span
-                      className={`font-semibold ${
-                        review.status === "PENDING" ? "text-red-500" : "text-green-500"
-                      }`}
-                    >
-                      {review.status}
-                    </span>
-                  </p>
-                </li>
+                />
               ))}
             </ul>
           ) : (
@@ -161,25 +151,18 @@ console.log(data)
           {reviewsAsReviewee.length > 0 ? (
             <ul className="space-y-4 max-h-[70vh] overflow-y-auto">
               {reviewsAsReviewee.map((review: any) => (
-                <li
-                onClick={() => setSelectedReview(review)}
-                  key={review.id}
-                  className="p-4 bg-gray-50 rounded-lg shadow-sm cursor-pointer hover:bg-gray-100 transition"
-                >
-                  <p className="text-gray-700">
-                    <strong>Reviewer:</strong> {review.reviewer.name}
-                  </p>
-                  <p className="text-gray-700">
-                    <strong>Status:</strong>{" "}
-                    <span
-                      className={`font-semibold ${
-                        review.status === "PENDING" ? "text-red-500" : "text-green-500"
-                      }`}
-                    >
-                      {review.status}
-                    </span>
-                  </p>
-                </li>
+                   <ReviewCard
+                   key={review.id}
+                   reviewerName={review?.reviewer?.name}
+                   revieweeName={review?.reviewee?.name}
+                   status={review.status}
+                   rating={review?.rating}
+                   onClick={() => {
+                     setSelectedReview(review);
+                     setEditableFeedback(review.feedback); // Load existing feedback into state
+                   }}
+                 />
+
               ))}
             </ul>
           ) : (
