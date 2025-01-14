@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useAuth } from "../../context/AuthContext"
 
 import PrivateRoute from "@/app/components/PrivateRoute";
-//import AwesomeStarsRating from 'react-awesome-stars-rating';
+import AwesomeStarsRating from 'react-awesome-stars-rating';
 
 // GraphQL Queries and Mutations
 const GET_REVIEWS = gql`
@@ -82,10 +82,8 @@ const ReviewsCRUD = () => {
   const [updateReview] = useMutation(UPDATE_REVIEW);
   const [deleteReview] = useMutation(DELETE_REVIEW);
   const { user } = useAuth(); 
-  console.log('user', user)
 
 
-  console.log(employeesData)
   const [form, setForm] = useState({
     id: "",
     reviewer: "",
@@ -137,7 +135,7 @@ const ReviewsCRUD = () => {
   };
 
   return (
-    <PrivateRoute>
+    <PrivateRoute user={user}>
        <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
       <h1 className="text-3xl font-bold text-gray-700 text-center mb-8">
         Review Management
@@ -207,69 +205,75 @@ const ReviewsCRUD = () => {
 
         {/* Right Side: Reviews List */}
         <div className="bg-white p-6 shadow-lg rounded-lg max-h-[80vh] overflow-y-auto">
-          <h2 className="text-xl font-semibold mb-4 bg-white text-gray-700">Reviews List</h2>
-          <div className="space-y-4">
-            {data.getAllReviews.map((review: any) => (
-              <div
-                key={review.id}
-                className="flex justify-between items-center bg-gray-100 p-4 rounded-md shadow-sm hover:bg-gray-200 transition duration-200"
-              >
-                <div>
-                  <p className="font-semibold text-gray-800">
-                    Reviewer: {review?.reviewer.name}
-                  </p>
-                  <p className="text-gray-600 text-sm">
-                    Reviewee: {review?.reviewee.name}
-                  </p>
-                  <p  className="text-gray-600 text-sm">
-                    Status: {" "}
-                    <span
-                      className={`font-semibold ${
-                        review.status === "PENDING"
-                          ? "text-red-500"
-                          : "text-green-500"
-                      }`}
-                    >
-                      {review.status}
-                    </span>
-                  </p>
-                </div>
-                {/* <div className="md:rotate-90">
-                <AwesomeStarsRating 
-                value={review?.rating} 
-                size={10} 
-                isEdit={false} 
-                className="flex items-center space-x-1 text-yellow-400"
-                />
+  <h2 className="text-xl font-semibold mb-4 text-gray-700">Reviews List</h2>
+  <div className="space-y-4">
+    {data.getAllReviews.map((review: any) => (
+      <div
+        key={review.id}
+        className="bg-gray-100 p-4 rounded-md shadow-sm hover:bg-gray-200 transition duration-200"
+      >
+        {/* Top Section: Reviewer, Reviewee, and Status */}
+        <div className="flex justify-between items-center">
+          <div className="text-left">
+            <p className="font-semibold text-gray-800">
+              Reviewer: {review?.reviewer.name}
+            </p>
+            <p className="text-gray-600 text-sm">
+              Reviewee: {review?.reviewee.name}
+            </p>
+          </div>
+          <p
+            className={`font-semibold ${
+              review.status === "PENDING" ? "text-red-500" : "text-green-500"
+            }`}
+          >
+            {review.status}
+          </p>
+        </div>
 
-                </div> */}
-                <div>
-                  <button
-                    onClick={() => {
-                      setForm({
-                        id: review?.id,
-                        reviewer: review?.reviewer.id,
-                        reviewee: review?.reviewee.id,
-                        feedback: review?.feedback,
-                        status: review?.status,
-                      });
-                      setEditModalOpen(true);
-                    }}
-                    className="text-blue-500 hover:underline mr-4"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(review.id)}
-                    className="text-red-500 hover:underline"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))}
+        {/* Divider */}
+        <div className="my-1 border-t border-gray-300"></div>
+
+        {/* Bottom Section: Stars and Actions */}
+        <div className="flex items-center justify-between">
+          {/* Stars */}
+          <AwesomeStarsRating
+            value={review?.rating}
+            size={15}
+            isEdit={false}
+            className="flex items-center space-x-1 text-yellow-400"
+          />
+
+          {/* Action Buttons */}
+          <div className="space-x-4">
+            <button
+              onClick={() => {
+                setForm({
+                  id: review?.id,
+                  reviewer: review?.reviewer.id,
+                  reviewee: review?.reviewee.id,
+                  feedback: review?.feedback,
+                  status: review?.status,
+                });
+                setEditModalOpen(true);
+              }}
+              className="text-blue-500 hover:underline"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => handleDelete(review.id)}
+              className="text-red-500 hover:underline"
+            >
+              Delete
+            </button>
           </div>
         </div>
+      </div>
+    ))}
+  </div>
+</div>
+
       </div>
 
       <button
