@@ -5,6 +5,7 @@ import { gql, useQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
 import ReviewCard from "../components/ReviewCard";
+import AwesomeStarsRating from "react-awesome-stars-rating";
 
 // GraphQL Queries
 const GET_ALL_REVIEWS = gql`
@@ -183,6 +184,17 @@ console.log(data)
             </p>
             <p className="text-gray-700">
               <strong>Reviewee:</strong> {selectedReview.reviewee.name}
+            </p>
+
+            <p>
+              <strong>Rating:</strong>
+              <AwesomeStarsRating
+          value={selectedReview.rating}
+          size={20}
+          isEdit={true}
+          onChange={(e:any)=>{console.log(selectedReview.rating)}}
+          className="flex items-center space-x-1 text-yellow-400"
+        />
             </p>
             <p className="text-gray-700 mb-4">
               <strong>Status:</strong>{" "}
