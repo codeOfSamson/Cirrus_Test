@@ -52,10 +52,10 @@ const UPDATE_REVIEW_MUTATION = gql`
 
 const EmployeeLandingPage = () => {
   const [selectedReview, setSelectedReview] = useState<any>(null);
-  const [editableFeedback, setEditableFeedback] = useState<string>("");
-  console.log(1, selectedReview)
+  const [editableFeedback, setEditableFeedback] = useState<string>(selectedReview ? selectedReview.feedback : '');
+  const [editableRating, setEditableRating] = useState<number>( selectedReview ? selectedReview.rating : 0);
   const [user, setUser] = useState({ username: "", isLoggedIn: false, role: "" });
-  
+  console.log(selectedReview)
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -69,7 +69,6 @@ const EmployeeLandingPage = () => {
 
   // Fetch reviews
   const { loading, error, data, refetch } = useQuery(GET_ALL_REVIEWS);
-console.log(data)
   // Mutation for updating reviews
   const [updateReview] = useMutation(UPDATE_REVIEW_MUTATION);
 
@@ -107,6 +106,7 @@ console.log(data)
             reviewee: selectedReview.reviewee.id,
             status:  editableFeedback !== "" ? 'COMPLETED': "PENDING", 
             feedback: editableFeedback, 
+            rating: editableRating,
           }
         },
       });
@@ -136,7 +136,8 @@ console.log(data)
                   rating={review?.rating}
                   onClick={() => {
                     setSelectedReview(review);
-                    setEditableFeedback(review.feedback); // Load existing feedback into state
+                    setEditableFeedback(review.feedback);
+                    setEditableRating(review.rating);
                   }}
                 />
               ))}
@@ -160,7 +161,8 @@ console.log(data)
                    rating={review?.rating}
                    onClick={() => {
                      setSelectedReview(review);
-                     setEditableFeedback(review.feedback); // Load existing feedback into state
+                     setEditableFeedback(review.feedback); 
+                     setEditableRating(review.rating)
                    }}
                  />
 
@@ -186,17 +188,18 @@ console.log(data)
               <strong>Reviewee:</strong> {selectedReview.reviewee.name}
             </p>
 
-            <p>
+            <p className="flex  space-x-1 text-gray-700"
+            >
               <strong>Rating:</strong>
               <AwesomeStarsRating
-          value={selectedReview.rating}
-          size={20}
+              value={editableRating}
+              size={20}
           isEdit={true}
-          onChange={(e:any)=>{console.log(selectedReview.rating)}}
-          className="flex items-center space-x-1 text-yellow-400"
+          onChange={(value)=>{setEditableRating(value)}}
+          className="flex  space-x-1 text-yellow-400"
         />
             </p>
-            <p className="text-gray-700 mb-4">
+            <p className="text-gray-700">
               <strong>Status:</strong>{" "}
               <span
                 className={`font-semibold ${
@@ -206,9 +209,13 @@ console.log(data)
                 {selectedReview.status}
               </span>
             </p>
+
+            <p className="text-gray-700">
+              <strong>Feedback:</strong> 
+            </p>
             <textarea
               className="w-full p-3 bg-white text-gray-700 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              value={editableFeedback ? editableFeedback : selectedReview.feedback}
+              value={editableFeedback}
               readOnly={selectedReview.reviewee.name === user.username}
 
               onChange={(e) => setEditableFeedback(e.target.value)}

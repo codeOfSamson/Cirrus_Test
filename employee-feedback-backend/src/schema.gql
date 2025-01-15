@@ -89,4 +89,5 @@ input UpdateReviewDto {
   reviewee: String!
   status: String!
   feedback: String!
+  rating: Float!
 }

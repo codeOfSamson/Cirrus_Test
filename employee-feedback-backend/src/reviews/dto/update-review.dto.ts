@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
@@ -22,4 +22,9 @@ export class UpdateReviewDto {
   @IsOptional()
   @IsString()
   feedback?: string;
+
+  @Field()
+  @IsOptional()
+  @IsNumber()
+  rating?: number;
 }
